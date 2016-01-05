@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * A product.
+ */
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,6 +19,5 @@ public class Product {
     private String supplier;
     private boolean available;
     private String imageURL;
-
 
 }

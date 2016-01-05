@@ -2,6 +2,9 @@ package com.infosupport.t2c3.domain.orders;
 
 import lombok.Getter;
 
+/**
+ * The current status of an order.
+ */
 @Getter
 public enum OrderStatus {
 
@@ -17,4 +20,5 @@ public enum OrderStatus {
     public String toString() {
         return status;
     }
+
 }

@@ -1,5 +1,8 @@
 package com.infosupport.t2c3.domain.products;
 
+/**
+ * The category a Product can be in.
+ */
 public enum Category {
 
     BICYCLE("bicycle"),

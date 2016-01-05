@@ -7,6 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * Class that combines all data to create an order.
+ */
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
