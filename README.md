@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 # T2-Case3
 Kantilever Project
 
@@ -96,3 +97,10 @@ __Documentatie__
 * [Spring Backend](https://github.com/JavaMinor2015/T2C3-Spring)
 * [Angular Frontend](https://github.com/JavaMinor2015/T2C3-Angular)
 * [Android Frontend](https://github.com/JavaMinor2015/T2C3-Android)
+
+## SonarQube
+Linux users can run:
+'mvn sonar:sonar' for maven
+Kitematic users run:
+mvn sonar:sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.jdbc.url="jdbc:h2:tcp://localhost/sonar"
+and replace 'localhost' with their docker virtual machine ip.
