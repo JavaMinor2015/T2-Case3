@@ -5,7 +5,7 @@ import com.infosupport.t2c3.domain.products.Category;
 import com.infosupport.t2c3.domain.products.Product;
 import com.infosupport.t2c3.repositories.ProductRepository;
 import java.math.BigDecimal;
-import java.util.Random;
+import java.security.SecureRandom;
 import javax.annotation.PostConstruct;
 import javax.ws.rs.Produces;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +31,9 @@ public class ProductService extends AbsRestService<Product> {
     }
 
     @PostConstruct
-    public void init() {
+    private void init() {
         //TODO: Remove this, is just adding random data
-        Random random = new Random();
+        SecureRandom random = new SecureRandom();
         for (int i = 0; i < 15; i++) {
             productRepo.save(new Product(
                     "Thing #" + random.nextInt(),
