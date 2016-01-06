@@ -1,7 +1,10 @@
 package com.infosupport.t2c3.domain.abs;
 
 import java.io.Serializable;
-import javax.persistence.*;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Version;
 import lombok.Getter;
 
 /**
