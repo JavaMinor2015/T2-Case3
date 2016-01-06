@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Product {
 
+    private long ID;
     private String name;
     private BigDecimal price;
     private Category category;
