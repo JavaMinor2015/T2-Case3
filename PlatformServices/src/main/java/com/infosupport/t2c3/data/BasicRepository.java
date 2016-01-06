@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
  * @param <T> The class of the Model
  */
 @Repository
-public interface BasicRepository<T> extends JpaRepository<T, Integer> {
+public interface BasicRepository<T> extends JpaRepository<T, Long> {
 
 }

@@ -1,9 +1,7 @@
 package com.infosupport.t2c3.domain.abs;
 
 import java.io.Serializable;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Version;
+import javax.persistence.*;
 import lombok.Getter;
 
 /**
@@ -16,6 +14,7 @@ public class AbsEntity implements Serializable {
     private static final long serialVersionUID = 8645136395267215911L;
 
     @Id
+    @GeneratedValue
     private Long id;
 
     @Version
