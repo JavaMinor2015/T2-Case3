@@ -71,3 +71,7 @@ crashlytics-build.properties
 
 ## SonarQube
 .sonar/
+ProjectStarter/test-db.mv.db
+ProjectStarter/test-db.trace.db
+test-db.mv.db
+test-db.trace.db

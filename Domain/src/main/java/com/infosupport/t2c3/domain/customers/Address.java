@@ -1,5 +1,7 @@
 package com.infosupport.t2c3.domain.customers;
 
+import com.infosupport.t2c3.domain.abs.AbsEntity;
+import javax.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +12,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Address {
+@Entity
+public class Address extends AbsEntity {
+
+    private static final long serialVersionUID = 984528033434820845L;
 
     private String city;
     private String street;
