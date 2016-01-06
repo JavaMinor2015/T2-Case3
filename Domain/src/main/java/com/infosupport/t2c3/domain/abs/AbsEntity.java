@@ -9,7 +9,7 @@ import lombok.Getter;
  */
 @Getter
 @MappedSuperclass
-public class AbsEntity implements Serializable {
+public abstract class AbsEntity implements Serializable {
 
     private static final long serialVersionUID = 8645136395267215911L;
 
