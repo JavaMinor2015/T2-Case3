@@ -1,6 +1,7 @@
 package com.infosupport.t2c3.service;
 
 import com.infosupport.t2c3.data.BasicRepository;
+import com.infosupport.t2c3.domain.abs.AbsEntity;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ws.rs.Produces;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 @CrossOrigin
 @Produces("application/json")
-public abstract class AbsRestService<X> {
+public abstract class AbsRestService<X extends AbsEntity> {
 
     /** The repo that is used for basic REST calls. */
     private BasicRepository<X> repo;
