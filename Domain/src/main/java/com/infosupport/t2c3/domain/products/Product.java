@@ -20,6 +20,7 @@ public class Product extends AbsEntity {
 
     private static final long serialVersionUID = 6547550483593301174L;
 
+    private long ID;
     private String name;
     private BigDecimal price;
     @Enumerated(EnumType.STRING)

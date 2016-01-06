@@ -3,6 +3,7 @@ package com.infosupport.t2c3;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.orm.jpa.EntityScan;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /**
@@ -10,7 +11,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  */
 @EnableJpaRepositories("com.infosupport.t2c3.repositories")
 @EntityScan("com.infosupport.t2c3.domain")
-@SpringBootApplication(scanBasePackages = "com.infosupport.t2c3")
+@ComponentScan("com.infosupport.t2c3.service")
+@SpringBootApplication
 public class ProjectStarterApplication {
 
     /**
