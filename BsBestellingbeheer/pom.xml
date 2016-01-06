@@ -11,5 +11,15 @@
 
     <artifactId>bs-bestellingbeheer</artifactId>
 
+    <dependencies>
+
+        <dependency>
+            <groupId>com.infosupport.t2c3</groupId>
+            <artifactId>platform-services</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+    </dependencies>
+
 
 </project>
