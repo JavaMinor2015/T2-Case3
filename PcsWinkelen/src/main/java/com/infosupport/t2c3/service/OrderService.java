@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.*;
  */
 
 @RestController
-@RequestMapping(value = "/order")
+@RequestMapping(value = "/order", produces = "application/json")
+@CrossOrigin
 public class OrderService {
 
     @Autowired
@@ -22,8 +23,7 @@ public class OrderService {
      *Get all the orders from the repo.
      * @return All the orders
      */
-    @CrossOrigin
-    @RequestMapping(method = RequestMethod.GET, value = "", produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET)
     public List<Order> getAllOrders() {
         return orderRepository.findAll();
     }
@@ -34,8 +34,7 @@ public class OrderService {
      * @param order The order to be persisted.
      * @return the order
      */
-    @CrossOrigin
-    @RequestMapping(method = RequestMethod.POST, value = "", consumes = "application/json", produces = "application/json")
+    @RequestMapping(method = RequestMethod.POST, consumes = "application/json")
     public Order placeOrder(@RequestBody Order order) {
         orderRepository.save(order);
 
