@@ -26,9 +26,9 @@ public class Order extends AbsEntity {
     private BigDecimal totalPrice;
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.PERSIST)
     private List<OrderItem> items;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     private CustomerData customerData;
 
 }
