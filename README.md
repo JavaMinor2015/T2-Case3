@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 # T2-Case3
 Kantilever Project
 
