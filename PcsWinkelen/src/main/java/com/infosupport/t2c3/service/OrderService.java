@@ -20,7 +20,7 @@ public class OrderService {
 
 
     /**
-     *Get all the orders from the repo.
+     * Get all the orders from the repo.
      * @return All the orders
      */
     @RequestMapping(method = RequestMethod.GET)
