@@ -17,10 +17,11 @@ public class ProjectStarterApplication {
 
     /**
      * Main method: Starts the application.
+     *
      * @param args Possible command line arguments
      */
-	public static void main(String[] args) {
-		SpringApplication.run(ProjectStarterApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ProjectStarterApplication.class, args);
+    }
 
 }

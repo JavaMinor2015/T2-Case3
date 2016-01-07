@@ -1,6 +1,7 @@
 package com.infosupport.t2c3.domain.customers;
 
 import com.infosupport.t2c3.domain.abs.AbsEntity;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import lombok.AllArgsConstructor;
@@ -21,7 +22,7 @@ public class CustomerData extends AbsEntity {
     private String firstName;
     private String lastName;
     private String emailAddress;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     private Address address;
 
 }

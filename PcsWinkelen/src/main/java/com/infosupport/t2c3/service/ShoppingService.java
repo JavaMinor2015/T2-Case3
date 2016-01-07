@@ -4,9 +4,8 @@ import com.infosupport.t2c3.domain.products.Category;
 import com.infosupport.t2c3.domain.products.Product;
 import com.infosupport.t2c3.repositories.ProductRepository;
 import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.security.SecureRandom;
 import java.util.List;
-import java.util.Random;
 import javax.annotation.PostConstruct;
 import javax.ws.rs.Produces;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,20 +24,30 @@ public class ShoppingService {
     @Autowired
     private ProductRepository productRepo;
 
+    /**
+     * Get all the products from repo.
+     *
+     * @return all products from repo
+     */
     @RequestMapping()
     public List<Product> getAllProducts() {
         return productRepo.findAll();
     }
 
+    /**
+     * Get product by id.
+     * @param id the id
+     * @return the product
+     */
     @RequestMapping("/{id}")
     public Product getProductById(@PathVariable("id") Long id) {
         return productRepo.findOne(id);
     }
 
     @PostConstruct
-    public void init() {
+    private void init() {
         //TODO: Remove this, is just adding random data
-        Random random = new Random();
+        SecureRandom random = new SecureRandom();
         for (int i = 0; i < 15; i++) {
             productRepo.save(new Product(
                     "Thing #" + random.nextInt(),
