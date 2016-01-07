@@ -4,7 +4,6 @@ import com.infosupport.t2c3.data.BasicRepository;
 import com.infosupport.t2c3.domain.abs.AbsEntity;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.ws.rs.Produces;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @param <X> The type provided by this service
  */
 @CrossOrigin
-@Produces("application/json")
 public abstract class AbsRestService<X extends AbsEntity> {
 
     /** The repo that is used for basic REST calls. */
@@ -39,7 +37,7 @@ public abstract class AbsRestService<X extends AbsEntity> {
      *
      * @return list of entities
      */
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public List<X> getAll() {
         return repo.findAll();
     }

@@ -7,9 +7,7 @@ import com.infosupport.t2c3.repositories.ProductRepository;
 import java.math.BigDecimal;
 import java.security.SecureRandom;
 import javax.annotation.PostConstruct;
-import javax.ws.rs.Produces;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,10 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
  * Created by Windows 7 on 6-1-2016.
  */
 @RestController
-@RequestMapping(value = "/products")
-@CrossOrigin
-@Produces("application/json")
+@RequestMapping(value = "/products", produces = "application/json")
 public class ProductService extends AbsRestService<Product> {
+
+    private static final int ADD_PRODUCTS = 15;
 
     @Autowired
     private ProductRepository productRepo;
@@ -30,11 +28,14 @@ public class ProductService extends AbsRestService<Product> {
         return productRepo;
     }
 
+    /**
+     * Initialize this product service.
+     */
     @PostConstruct
-    private void init() {
+    public void init() {
         //TODO: Remove this, is just adding random data
         SecureRandom random = new SecureRandom();
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < ADD_PRODUCTS; i++) {
             productRepo.save(new Product(
                     "Thing #" + random.nextInt(),
                     new BigDecimal(random.nextDouble()),
