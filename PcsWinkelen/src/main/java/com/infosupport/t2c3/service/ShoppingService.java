@@ -1,6 +1,7 @@
 package com.infosupport.t2c3.service;
 
 import com.infosupport.t2c3.domain.orders.Order;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -9,8 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/order")
-public class OrderplacingService {
-    
+public class ShoppingService {
+
     /**
      * Send order to the backend. Repo passes it to the database.
      * @param order The order to be persisted.
