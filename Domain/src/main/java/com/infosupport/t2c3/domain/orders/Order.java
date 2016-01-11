@@ -13,7 +13,7 @@ import lombok.Setter;
 /**
  * Class that combines all data to create an order.
  *
- * Override default table name as ORDER is a reserved command.
+ * Override default table name since ORDER is a reserved command.
  */
 @Entity
 @Getter

@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.security.SecureRandom;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Created by Windows 7 on 6-1-2016.
  */
 @RestController
+@ExposesResourceFor(Product.class)
 @RequestMapping(value = "/products", produces = "application/json")
 public class ProductService extends AbsRestService<Product> {
 

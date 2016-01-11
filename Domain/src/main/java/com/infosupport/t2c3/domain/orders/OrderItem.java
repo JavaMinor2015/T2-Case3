@@ -27,7 +27,10 @@ public class OrderItem extends AbsEntity {
     /** The price of a single item. */
     @Setter
     private BigDecimal price;
+
     private int amount;
+
+    @Setter
     @ManyToOne
     private Product product;
 }
