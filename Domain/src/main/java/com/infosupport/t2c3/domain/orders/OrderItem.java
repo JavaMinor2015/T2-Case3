@@ -8,6 +8,7 @@ import javax.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * A single item in a order.
@@ -24,6 +25,7 @@ public class OrderItem extends AbsEntity {
     private static final long serialVersionUID = 5095267107708465278L;
 
     /** The price of a single item. */
+    @Setter
     private BigDecimal price;
     private int amount;
     @ManyToOne

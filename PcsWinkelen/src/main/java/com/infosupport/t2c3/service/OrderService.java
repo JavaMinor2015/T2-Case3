@@ -1,8 +1,13 @@
 package com.infosupport.t2c3.service;
 
 import com.infosupport.t2c3.domain.orders.Order;
+import com.infosupport.t2c3.domain.orders.OrderItem;
+import com.infosupport.t2c3.domain.products.Product;
 import com.infosupport.t2c3.repositories.OrderRepository;
+import com.infosupport.t2c3.repositories.ProductRepository;
+import java.math.BigDecimal;
 import java.util.List;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,19 +18,23 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(value = "/order", produces = "application/json")
 @CrossOrigin
+@Setter
 public class OrderService {
 
     @Autowired
-    private OrderRepository orderRepository;
+    private OrderRepository orderRepo;
+    @Autowired
+    private ProductRepository productRepo;
 
 
     /**
      * Get all the orders from the repo.
+     *
      * @return All the orders
      */
     @RequestMapping(method = RequestMethod.GET)
     public List<Order> getAllOrders() {
-        return orderRepository.findAll();
+        return orderRepo.findAll();
     }
 
     /**
@@ -36,9 +45,29 @@ public class OrderService {
      */
     @RequestMapping(method = RequestMethod.POST, consumes = "application/json")
     public Order placeOrder(@RequestBody Order order) {
-        orderRepository.save(order);
+
+        Order newOrder = calculatePrices(order);
+        orderRepo.save(newOrder);
 
         //TODO send succes message
+        return newOrder;
+    }
+
+    /**
+     * Calculates and sets all prices in the order instance.
+     *
+     * @param order the order
+     * @return the order with prices set
+     */
+    private Order calculatePrices(Order order) {
+        order.setTotalPrice(new BigDecimal(0.0));
+
+        for (OrderItem item : order.getItems()) {
+            Product product = productRepo.findOne(item.getProduct().getId());
+            item.setPrice(product.getPrice());
+            order.setTotalPrice(order.getTotalPrice()
+                    .add(item.getPrice().multiply(new BigDecimal(item.getAmount()))));
+        }
         return order;
     }
 }
