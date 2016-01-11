@@ -8,6 +8,7 @@ import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * Class that combines all data to create an order.
@@ -23,6 +24,7 @@ public class Order extends AbsEntity {
 
     private static final long serialVersionUID = 3562382393047819011L;
 
+    @Setter
     private BigDecimal totalPrice;
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
