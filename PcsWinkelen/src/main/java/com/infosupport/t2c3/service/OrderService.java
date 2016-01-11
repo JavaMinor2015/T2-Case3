@@ -65,8 +65,9 @@ public class OrderService {
         for (OrderItem item : order.getItems()) {
             Product product = productRepo.findOne(item.getProduct().getId());
             item.setPrice(product.getPrice());
-            order.setTotalPrice(order.getTotalPrice()
-                    .add(item.getPrice().multiply(new BigDecimal(item.getAmount()))));
+            BigDecimal pricePerItem = item.getPrice().multiply(new BigDecimal(item.getAmount()));
+            BigDecimal totalPrice = order.getTotalPrice().add(pricePerItem);
+            order.setTotalPrice(totalPrice);
         }
         return order;
     }
