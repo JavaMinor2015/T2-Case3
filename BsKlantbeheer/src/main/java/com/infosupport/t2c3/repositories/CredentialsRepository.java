@@ -10,8 +10,19 @@ import org.springframework.stereotype.Component;
 @Component
 public interface CredentialsRepository extends BasicRepository<Credentials> {
 
+    /**
+     * Find credentials by username.
+     * @param userName the username
+     * @return the credentials
+     */
     Credentials findByUserName(String userName);
 
+
+    /**
+     * Find credentials by token.
+     * @param token the token
+     * @return the credentials
+     */
     Credentials findByToken(String token);
 
 }

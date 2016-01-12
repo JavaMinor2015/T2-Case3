@@ -2,7 +2,6 @@ package com.infosupport.t2c3.service;
 
 import com.infosupport.t2c3.domain.customers.Credentials;
 import com.infosupport.t2c3.domain.customers.Customer;
-import com.infosupport.t2c3.domain.customers.SuppliedCredentials;
 import com.infosupport.t2c3.model.Token;
 import com.infosupport.t2c3.repositories.CredentialsRepository;
 import com.infosupport.t2c3.repositories.CustomerRepository;
@@ -44,13 +43,22 @@ public class LoginService {
     }
 
 
+    /**
+     * Log a customer in using his/her credentials.
+     * @param credentials credentials of customer
+     * @return token
+     */
     @RequestMapping(value = "/login", method = RequestMethod.POST, consumes = "application/json")
-    public Token login(@RequestBody SuppliedCredentials credentials) {
+    public Token login(@RequestBody Credentials credentials) {
         String tokenValue = securityService.verify(credentials.getUserName(), credentials.getPassword());
         Token token = new Token(tokenValue);
         return token;
     }
 
+    /**
+     * Log a customer out using his/her token.
+     * @param token credentials of customer
+     */
     @RequestMapping(value = "/logout", method = RequestMethod.POST, consumes = "application/json")
     public void logout(@RequestBody Token token) {
         securityService.logout(token.getValue());

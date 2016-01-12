@@ -19,9 +19,14 @@ public class RegistrationService {
     @Autowired
     private SecurityService securityService;
 
-    @RequestMapping(value = "/registrate", method = RequestMethod.POST, consumes = "application/json")
+    /**
+     * Register a customer.
+     * @param customer customer with data to write to db.
+     * @return token, so user is immediately logged in
+     */
+    @RequestMapping(value = "/register", method = RequestMethod.POST, consumes = "application/json")
     public Token registrate(@RequestBody Customer customer) {
-        String tokenValue = securityService.registrate(customer);
+        String tokenValue = securityService.register(customer);
         Token token = new Token(tokenValue);
         return token;
     }

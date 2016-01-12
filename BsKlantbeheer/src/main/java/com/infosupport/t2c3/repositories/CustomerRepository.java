@@ -9,7 +9,18 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public interface CustomerRepository extends BasicRepository<Customer> {
+
+    /**
+     * Find customer by username of credentials.
+     * @param userName the username
+     * @return the customer
+     */
     Customer findByCredentialsUserName(String userName);
 
+    /**
+     * Find customer by token of credentials.
+     * @param token the token
+     * @return the customer
+     */
     Customer findByCredentialsToken(String token);
 }
