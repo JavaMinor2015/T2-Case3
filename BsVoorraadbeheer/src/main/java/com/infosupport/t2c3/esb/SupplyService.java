@@ -4,10 +4,8 @@ import com.infosupport.t2c3.esb.model.EsbTask;
 import com.infosupport.t2c3.esb.model.EsbToken;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Created by Stoux on 12/01/2016.
  */
 @RestController
-@RequestMapping(path = "/supply", produces = "application/json")
+@RequestMapping(value = "/supply", produces = "application/json")
 public class SupplyService {
 
     @Autowired
@@ -41,25 +39,27 @@ public class SupplyService {
      *
      * @return Their token
      */
-    @RequestMapping(path = "/sync")
+    @RequestMapping(value = "/sync")
     public EsbToken requestSync() {
-        //Generate and store token
-        EsbToken token = EsbToken.generateToken();
-        uuidToToken.put(token.getToken(),token);
 
         //See if the task is already running
-        Optional<EsbTask> task = findTask(EsbTask.Type.SYNC);
-        if (task.isPresent()) {
-            boolean isRemoved = removeIfOutdated(task.get());
-            if (!isRemoved) {
-                token.setTask(task);
-                return token;
+        EsbTask task = findTask(EsbTask.Type.SYNC);
+        if (task != null) {
+            boolean isRemoved = removeIfOutdated(task);
+            if (isRemoved) {
+                task = null;
             }
         }
 
-        //Create a new task
-        EsbTask esbTask = taskHandler.startSyncTask();
-        token.setTask(Optional.of(esbTask));
+        //Create a new task if needed
+        if (task == null) {
+            task = taskHandler.startSyncTask();
+        }
+
+
+        //Generate and store token
+        EsbToken token = EsbToken.generateToken(task);
+        uuidToToken.put(token.getToken(),token);
         return token;
     }
 
@@ -75,18 +75,18 @@ public class SupplyService {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
         EsbToken foundToken = uuidToToken.get(tokenKey);
-        return new ResponseEntity<>(foundToken.getTask().get(), HttpStatus.OK);
+        return new ResponseEntity<>(foundToken.getTask(), HttpStatus.OK);
     }
 
-    private Optional<EsbTask> findTask(EsbTask.Type type) {
+    private EsbTask findTask(EsbTask.Type type) {
         synchronized (currentTasks) {
             for (EsbTask currentTask : currentTasks) {
                 if (currentTask.getType() == type) {
-                    return Optional.of(currentTask);
+                    return currentTask;
                 }
             }
         }
-        return Optional.empty();
+        return null;
     }
 
     private boolean removeIfOutdated(EsbTask task) {

@@ -1,8 +1,6 @@
 package com.infosupport.t2c3.esb.model;
 
-import java.util.Optional;
 import java.util.UUID;
-import javax.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,7 +17,7 @@ public class EsbToken {
 
     private String token;
     @Setter
-    private Optional<EsbTask> task;
+    private EsbTask task;
 
     private long expiresAt;
 
@@ -28,10 +26,10 @@ public class EsbToken {
      *
      * @return The token
      */
-    public static EsbToken generateToken() {
+    public static EsbToken generateToken(EsbTask task) {
         return new EsbToken(
                 UUID.randomUUID().toString(),
-                Optional.empty(),
+                task,
                 System.currentTimeMillis() + TOKEN_LIFESPAN
         );
     }

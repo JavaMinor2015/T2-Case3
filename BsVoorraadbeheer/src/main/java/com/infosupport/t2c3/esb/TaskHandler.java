@@ -2,8 +2,8 @@ package com.infosupport.t2c3.esb;
 
 import com.infosupport.t2c3.esb.model.EsbTask;
 import com.infosupport.t2c3.esb.tasks.SupplySyncTask;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.AsyncTaskExecutor;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,8 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class TaskHandler {
 
-    @Autowired
-    private AsyncTaskExecutor taskExecutor;
+    private AsyncTaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
 
     /**
      * Creates and starts a Supply Sync Task.
