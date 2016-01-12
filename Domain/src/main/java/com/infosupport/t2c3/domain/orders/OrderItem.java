@@ -12,9 +12,9 @@ import lombok.Setter;
 
 /**
  * A single item in a order.
- *
+ * <p>
  * Contains the number of times a certain product
- *  is in the order.
+ * is in the order.
  */
 @Getter
 @AllArgsConstructor
@@ -24,7 +24,9 @@ public class OrderItem extends AbsEntity {
 
     private static final long serialVersionUID = 5095267107708465278L;
 
-    /** The price of a single item. */
+    /**
+     * The price of a single item.
+     */
     @Setter
     private BigDecimal price;
     private int amount;
