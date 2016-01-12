@@ -25,7 +25,7 @@ public class RegistrationService {
      * @return token, so user is immediately logged in
      */
     @RequestMapping(value = "/register", method = RequestMethod.POST, consumes = "application/json")
-    public Token registrate(@RequestBody Customer customer) {
+    public Token register(@RequestBody Customer customer) {
         String tokenValue = securityService.register(customer);
         Token token = new Token(tokenValue);
         return token;

@@ -10,6 +10,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import javax.annotation.PostConstruct;
+import lombok.Setter;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,9 +24,11 @@ public class SecurityService {
     private static final int RANDOM_MIN = 12345;
     private static final Logger LOGGER = Logger.getLogger(SecurityService.class.getName());
 
+    @Setter
     @Autowired
     private CredentialsRepository credentialsRepo;
 
+    @Setter
     @Autowired
     private CustomerRepository customerRepo;
 
@@ -50,7 +53,6 @@ public class SecurityService {
      * @return login token
      */
     public String verify(String userName, String password) {
-        boolean loginSuccessful = false;
         String encodedPassword = hash(password);
 
         Credentials c = credentialsRepo.findByUserName(userName);
