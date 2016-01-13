@@ -53,7 +53,7 @@ public class OrderServiceTest extends TestCase {
         items.add(item2);
         items.add(item3);
 
-        order = new Order(null, null, items, null, null);
+        order = new Order(null, null, items, null);
 
         orderService = new OrderService();
         mockedOrderRepo = mock(OrderRepository.class);
@@ -81,7 +81,6 @@ public class OrderServiceTest extends TestCase {
         assertTrue(customer.getOrders().size() == 0);
         orderService.placeOrder(new OrderRequest(new Token("TOKENFORCUSTOMER", null), order));
         assertTrue(customer.getOrders().size() == 1 );
-        assertTrue(customer.getOrders().get(0).getCustomer() != null);
     }
 
     public void testPlaceOrderWithoutToken(){

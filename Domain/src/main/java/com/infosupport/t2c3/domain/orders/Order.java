@@ -1,8 +1,6 @@
 package com.infosupport.t2c3.domain.orders;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.infosupport.t2c3.domain.abs.AbsEntity;
-import com.infosupport.t2c3.domain.customers.Customer;
 import com.infosupport.t2c3.domain.customers.CustomerData;
 import java.math.BigDecimal;
 import java.util.List;
@@ -34,9 +32,5 @@ public class Order extends AbsEntity {
     private List<OrderItem> items;
     @OneToOne(cascade = CascadeType.PERSIST)
     private CustomerData customerData;
-    @ManyToOne()
-    @Setter
-    @JsonBackReference
-    private Customer customer;
 
 }

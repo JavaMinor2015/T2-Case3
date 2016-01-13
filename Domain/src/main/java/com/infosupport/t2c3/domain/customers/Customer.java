@@ -1,6 +1,5 @@
 package com.infosupport.t2c3.domain.customers;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.infosupport.t2c3.domain.abs.AbsEntity;
 import com.infosupport.t2c3.domain.orders.Order;
 import java.util.List;
@@ -28,8 +27,7 @@ public class Customer extends AbsEntity {
     private Address address;
     @OneToOne(cascade = CascadeType.PERSIST)
     private Credentials credentials;
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.MERGE)
-    @JsonManagedReference
+    @OneToMany(cascade = CascadeType.MERGE)
     private List<Order> orders;
 
     /**

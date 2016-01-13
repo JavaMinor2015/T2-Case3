@@ -54,16 +54,15 @@ public class OrderService {
     public ResponseEntity<String> placeOrder(@RequestBody OrderRequest orderRequest) {
 
         Order newOrder = calculatePrices(orderRequest.getOrder());
+        orderRepo.save(newOrder);
 
         if (orderRequest.getToken() != null && orderRequest.getToken().getValue() != null) {
             Customer customer = customerRepo.findByCredentialsToken(orderRequest.getToken().getValue());
             customer.addOrder(orderRequest.getOrder());
-            orderRequest.getOrder().setCustomer(customer);
+            customerRepo.save(customer);
         }
 
-        orderRepo.save(newOrder);
-
-        return new ResponseEntity<String>(HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     /**
