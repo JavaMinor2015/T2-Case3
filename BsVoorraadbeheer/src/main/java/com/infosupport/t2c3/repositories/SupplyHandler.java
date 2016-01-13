@@ -2,12 +2,10 @@ package com.infosupport.t2c3.repositories;
 
 import com.infosupport.t2c3.domain.products.Product;
 import com.infosupport.t2c3.domain.products.Supply;
+import com.infosupport.t2c3.exceptions.CaseException;
 import com.infosupport.t2c3.exceptions.ItemNotFoundException;
 import com.infosupport.t2c3.exceptions.NoSupplyException;
-import java.util.Optional;
-import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 /**
@@ -36,13 +34,12 @@ public class SupplyHandler {
      * @param product The product
      * @param decreaseWith Decrease with amount
      * @return The new number of units left
-     * @throws ItemNotFoundException If no Supply is found for this Product
-     * @throws NoSupplyException If there aren't enough units left to use
+     * @throws CaseException If no Supply is found for this Product or if there aren't enough Units left
      */
-    public Integer decreaseStock(Product product, Integer decreaseWith) throws ItemNotFoundException, NoSupplyException {
+    public Integer decreaseStock(Product product, Integer decreaseWith) throws CaseException {
         Supply supply = getSupply(product);
         if (decreaseWith > supply.getLeft()) {
-            throw new NoSupplyException(supply.getLeft());
+            throw new NoSupplyException(product, supply.getLeft());
         }
         supply.setLeft(supply.getLeft() - decreaseWith);
         repo.save(supply);

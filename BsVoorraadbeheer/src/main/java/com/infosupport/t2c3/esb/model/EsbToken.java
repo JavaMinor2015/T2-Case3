@@ -13,7 +13,7 @@ import lombok.Setter;
 public class EsbToken {
 
     /** The time a token is valid. */
-    private static final long TOKEN_LIFESPAN = 2 * 60 * 60 * 1000;
+    private static final long TOKEN_LIFESPAN = 2L * 60 * 60 * 1000;
 
     private String token;
     @Setter
@@ -24,6 +24,7 @@ public class EsbToken {
     /**
      * Generate a random token.
      *
+     * @param task The task this token is created for
      * @return The token
      */
     public static EsbToken generateToken(EsbTask task) {

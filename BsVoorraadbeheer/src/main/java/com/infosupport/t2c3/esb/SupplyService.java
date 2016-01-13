@@ -59,7 +59,7 @@ public class SupplyService {
 
         //Generate and store token
         EsbToken token = EsbToken.generateToken(task);
-        uuidToToken.put(token.getToken(),token);
+        uuidToToken.put(token.getToken(), token);
         return token;
     }
 

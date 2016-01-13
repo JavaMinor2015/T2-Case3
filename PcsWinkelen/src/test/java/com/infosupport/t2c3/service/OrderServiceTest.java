@@ -3,16 +3,18 @@ package com.infosupport.t2c3.service;
 import com.infosupport.t2c3.domain.orders.Order;
 import com.infosupport.t2c3.domain.orders.OrderItem;
 import com.infosupport.t2c3.domain.products.Product;
-import com.infosupport.t2c3.exceptions.ItemNotFoundException;
-import com.infosupport.t2c3.exceptions.NoSupplyException;
+import com.infosupport.t2c3.exceptions.CaseException;
 import com.infosupport.t2c3.repositories.OrderRepository;
 import com.infosupport.t2c3.repositories.ProductRepository;
+import com.infosupport.t2c3.repositories.SupplyHandler;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import junit.framework.TestCase;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -26,6 +28,7 @@ public class OrderServiceTest extends TestCase {
     private OrderService orderService;
     private OrderRepository mockedOrderRepo;
     private ProductRepository mockedProductRepo;
+    private SupplyHandler supplyHandler;
 
     public void setUp() throws Exception {
         super.setUp();
@@ -50,6 +53,8 @@ public class OrderServiceTest extends TestCase {
         orderService = new OrderService();
         mockedOrderRepo = mock(OrderRepository.class);
         mockedProductRepo = mock(ProductRepository.class);
+        supplyHandler = mock(SupplyHandler.class);
+
 
         when(p1.getId()).thenReturn(1l);
         when(p2.getId()).thenReturn(2l);
@@ -59,9 +64,12 @@ public class OrderServiceTest extends TestCase {
         when(mockedProductRepo.findOne(2l)).thenReturn(p2);
         when(mockedProductRepo.findOne(3l)).thenReturn(p3);
 
+        when(supplyHandler.getUnitsLeft(any())).thenReturn(100);
+        when(supplyHandler.decreaseStock(any(), anyInt())).thenReturn(100);
+
         orderService.setOrderRepo(mockedOrderRepo);
         orderService.setProductRepo(mockedProductRepo);
-
+        orderService.setSupplyHandler(supplyHandler);
     }
 
     public void testCalculatePrices(){
@@ -75,7 +83,7 @@ public class OrderServiceTest extends TestCase {
 
         try {
             orderService.placeOrder(order);
-        } catch (ItemNotFoundException | NoSupplyException e) {
+        } catch (CaseException e) {
             fail();
         }
 
