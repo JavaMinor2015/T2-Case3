@@ -27,6 +27,7 @@ public class Order extends AbsEntity {
     @Setter
     private BigDecimal totalPrice;
     @Enumerated(EnumType.STRING)
+    @Setter
     private OrderStatus status;
     @OneToMany(cascade = CascadeType.PERSIST)
     private List<OrderItem> items;
