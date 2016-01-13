@@ -3,6 +3,8 @@ package com.infosupport.t2c3.service;
 import com.infosupport.t2c3.domain.orders.Order;
 import com.infosupport.t2c3.domain.orders.OrderItem;
 import com.infosupport.t2c3.domain.products.Product;
+import com.infosupport.t2c3.exceptions.ItemNotFoundException;
+import com.infosupport.t2c3.exceptions.NoSupplyException;
 import com.infosupport.t2c3.repositories.OrderRepository;
 import com.infosupport.t2c3.repositories.ProductRepository;
 import java.math.BigDecimal;
@@ -71,7 +73,11 @@ public class OrderServiceTest extends TestCase {
         Product p1 = mockedProductRepo.findOne(items.get(0).getProduct().getId());
         Product p2 = mockedProductRepo.findOne(items.get(1).getProduct().getId());
 
-        orderService.placeOrder(order);
+        try {
+            orderService.placeOrder(order);
+        } catch (ItemNotFoundException | NoSupplyException e) {
+            fail();
+        }
 
         assertEquals(new BigDecimal(173.22).setScale(2, RoundingMode.HALF_UP), order.getItems().get(0).getPrice().setScale(2, RoundingMode.HALF_UP));
         assertEquals(new BigDecimal(20.57).setScale(2, RoundingMode.HALF_UP), order.getItems().get(1).getPrice().setScale(2, RoundingMode.HALF_UP));

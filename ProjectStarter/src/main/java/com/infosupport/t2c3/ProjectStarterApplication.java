@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  */
 @EnableJpaRepositories("com.infosupport.t2c3.repositories")
 @EntityScan("com.infosupport.t2c3.domain")
-@ComponentScan({"com.infosupport.t2c3.service", "com.infosupport.t2c3.esb"})
+@ComponentScan("com.infosupport.t2c3")
 @SpringBootApplication
 @SuppressWarnings("squid:S1118")
 public class ProjectStarterApplication {
