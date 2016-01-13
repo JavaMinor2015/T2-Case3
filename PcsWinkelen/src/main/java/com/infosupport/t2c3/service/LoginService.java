@@ -44,9 +44,9 @@ public class LoginService {
         return customerRepo.findAll();
     }
 
-
     /**
      * Log a customer in using his/her credentials.
+     *
      * @param credentials credentials of customer
      * @return token
      */
@@ -54,10 +54,12 @@ public class LoginService {
     public ResponseEntity<Token> login(@RequestBody Credentials credentials) {
         Token token;
         String tokenValue = securityService.verify(credentials.getUserName(), credentials.getPassword());
-        if(!tokenValue.isEmpty()){
-             token = new Token(tokenValue);
+        if (!tokenValue.isEmpty()) {
+            Customer customer = customerRepo.findByCredentialsUserName(credentials.getUserName());
+            customer.setCredentials(null);
+            token = new Token(tokenValue, customer);
             return new ResponseEntity<>(token, HttpStatus.OK);
-        }else{
+        } else {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
@@ -65,6 +67,7 @@ public class LoginService {
 
     /**
      * Log a customer out using his/her token.
+     *
      * @param token credentials of customer
      */
     @RequestMapping(value = "/logout", method = RequestMethod.POST, consumes = "application/json")

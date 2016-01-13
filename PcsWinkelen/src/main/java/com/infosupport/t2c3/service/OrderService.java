@@ -1,14 +1,19 @@
 package com.infosupport.t2c3.service;
 
+import com.infosupport.t2c3.domain.customers.Customer;
 import com.infosupport.t2c3.domain.orders.Order;
 import com.infosupport.t2c3.domain.orders.OrderItem;
 import com.infosupport.t2c3.domain.products.Product;
+import com.infosupport.t2c3.model.OrderRequest;
+import com.infosupport.t2c3.repositories.CustomerRepository;
 import com.infosupport.t2c3.repositories.OrderRepository;
 import com.infosupport.t2c3.repositories.ProductRepository;
 import java.math.BigDecimal;
 import java.util.List;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -25,6 +30,8 @@ public class OrderService {
     private OrderRepository orderRepo;
     @Autowired
     private ProductRepository productRepo;
+    @Autowired
+    private CustomerRepository customerRepo;
 
 
     /**
@@ -40,17 +47,23 @@ public class OrderService {
     /**
      * Send order to the backend. Repo passes it to the dababase.
      *
-     * @param order The order to be persisted.
+     * @param orderRequest The orderRequest to be persisted.
      * @return the order
      */
     @RequestMapping(method = RequestMethod.POST, consumes = "application/json")
-    public Order placeOrder(@RequestBody Order order) {
+    public ResponseEntity<String> placeOrder(@RequestBody OrderRequest orderRequest) {
 
-        Order newOrder = calculatePrices(order);
+        Order newOrder = calculatePrices(orderRequest.getOrder());
+
+        if (orderRequest.getToken() != null && orderRequest.getToken().getValue() != null) {
+            Customer customer = customerRepo.findByCredentialsToken(orderRequest.getToken().getValue());
+            customer.addOrder(orderRequest.getOrder());
+            orderRequest.getOrder().setCustomer(customer);
+        }
+
         orderRepo.save(newOrder);
 
-        //TODO send succes message
-        return newOrder;
+        return new ResponseEntity<String>(HttpStatus.CREATED);
     }
 
     /**
