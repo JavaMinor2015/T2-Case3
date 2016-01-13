@@ -9,6 +9,8 @@ import com.infosupport.t2c3.security.SecurityService;
 import java.util.List;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -49,10 +51,16 @@ public class LoginService {
      * @return token
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST, consumes = "application/json")
-    public Token login(@RequestBody Credentials credentials) {
+    public ResponseEntity<Token> login(@RequestBody Credentials credentials) {
+        Token token;
         String tokenValue = securityService.verify(credentials.getUserName(), credentials.getPassword());
-        Token token = new Token(tokenValue);
-        return token;
+        if(!tokenValue.isEmpty()){
+             token = new Token(tokenValue);
+            return new ResponseEntity<>(token, HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
     }
 
     /**
