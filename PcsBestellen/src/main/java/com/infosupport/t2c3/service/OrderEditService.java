@@ -43,13 +43,13 @@ public class OrderEditService {
         return orderRepo.findOne(id);
     }
 
+    //TODO: Convert this to ÌD based put request
     /**
      * Edit an order.
      *
      * @param order the order to be edited
      * @return response 200 OK
      */
-    //TODO: Convert this to PUT /employeeorder/{ID}
     @RequestMapping(method = RequestMethod.PUT, consumes = "application/json")
     public ResponseEntity<String> editOrder(@RequestBody Order order) {
         orderRepo.save(order);
