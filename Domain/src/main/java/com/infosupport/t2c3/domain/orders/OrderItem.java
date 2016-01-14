@@ -5,10 +5,7 @@ import com.infosupport.t2c3.domain.products.Product;
 import java.math.BigDecimal;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * A single item in a order.
@@ -17,6 +14,7 @@ import lombok.Setter;
  *  is in the order.
  */
 @Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity

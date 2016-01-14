@@ -1,7 +1,7 @@
 package com.infosupport.t2c3.repositories;
 
 import com.infosupport.t2c3.data.BasicRepository;
-import com.infosupport.t2c3.domain.customers.Customer;
+import com.infosupport.t2c3.domain.accounts.Customer;
 import org.springframework.stereotype.Component;
 
 /**

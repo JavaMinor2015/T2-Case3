@@ -1,7 +1,7 @@
 package com.infosupport.t2c3.service;
 
-import com.infosupport.t2c3.domain.customers.Credentials;
-import com.infosupport.t2c3.domain.customers.Customer;
+import com.infosupport.t2c3.domain.accounts.Credentials;
+import com.infosupport.t2c3.domain.accounts.Customer;
 import com.infosupport.t2c3.model.Token;
 import com.infosupport.t2c3.repositories.CredentialsRepository;
 import com.infosupport.t2c3.repositories.CustomerRepository;

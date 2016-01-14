@@ -1,6 +1,6 @@
 package com.infosupport.t2c3.service;
 
-import com.infosupport.t2c3.domain.customers.Customer;
+import com.infosupport.t2c3.domain.accounts.Customer;
 import com.infosupport.t2c3.domain.orders.Order;
 import com.infosupport.t2c3.domain.orders.OrderItem;
 import com.infosupport.t2c3.domain.products.Product;
@@ -47,7 +47,7 @@ public class OrderServiceTest extends TestCase {
 
         customer = new Customer();
         customer.setFirstName("testVoornaam");
-        customer.setOrders(new ArrayList());
+        customer.setOrders(new ArrayList<>());
 
         OrderItem item1 = new OrderItem(null, 2, p1);
         OrderItem item2 = new OrderItem(null, 3, p2);
@@ -67,13 +67,13 @@ public class OrderServiceTest extends TestCase {
         mockedCustomerRepo = mock(CustomerRepository.class);
 
 
-        when(p1.getId()).thenReturn(1l);
-        when(p2.getId()).thenReturn(2l);
-        when(p3.getId()).thenReturn(3l);
+        when(p1.getId()).thenReturn(1L);
+        when(p2.getId()).thenReturn(2L);
+        when(p3.getId()).thenReturn(3L);
 
-        when(mockedProductRepo.findOne(1l)).thenReturn(p1);
-        when(mockedProductRepo.findOne(2l)).thenReturn(p2);
-        when(mockedProductRepo.findOne(3l)).thenReturn(p3);
+        when(mockedProductRepo.findOne(1L)).thenReturn(p1);
+        when(mockedProductRepo.findOne(2L)).thenReturn(p2);
+        when(mockedProductRepo.findOne(3L)).thenReturn(p3);
 
         when(supplyHandler.getUnitsLeft(any())).thenReturn(100);
         when(supplyHandler.decreaseStock(any(), anyInt())).thenReturn(100);

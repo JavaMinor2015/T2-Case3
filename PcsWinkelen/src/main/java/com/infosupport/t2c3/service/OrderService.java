@@ -1,11 +1,7 @@
 package com.infosupport.t2c3.service;
 
-import com.infosupport.t2c3.domain.customers.Address;
-import com.infosupport.t2c3.domain.customers.Customer;
-import com.infosupport.t2c3.domain.customers.CustomerData;
-import com.infosupport.t2c3.domain.orders.Order;
-import com.infosupport.t2c3.domain.orders.OrderItem;
-import com.infosupport.t2c3.domain.orders.OrderStatus;
+import com.infosupport.t2c3.domain.accounts.Customer;
+import com.infosupport.t2c3.domain.orders.*;
 import com.infosupport.t2c3.domain.products.Product;
 import com.infosupport.t2c3.exceptions.CaseException;
 import com.infosupport.t2c3.exceptions.ItemNotFoundException;
@@ -22,9 +18,9 @@ import lombok.Setter;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -130,11 +126,12 @@ public class OrderService {
         for (int i = 0; i < 2; i++) {
             List<OrderItem> items = new ArrayList<>();
             for (int a = 0; a < MAX_THREE; a++) {
-                items.add(new OrderItem(
-                        null,
-                        random.nextInt(MAX_FOUR) + 1,
-                        productRepo.findOne((long) random.nextInt(MAX_FIFTEEN) + 1)
-                ));
+                items.add(
+                        OrderItem.builder()
+                        .amount(random.nextInt(MAX_FOUR) + 1)
+                        .product(productRepo.findOne((long) random.nextInt(MAX_FIFTEEN) + 1))
+                        .build()
+                );
             }
 
             Order order = new Order(

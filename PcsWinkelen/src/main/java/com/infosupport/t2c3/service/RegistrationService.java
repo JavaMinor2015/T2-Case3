@@ -1,6 +1,6 @@
 package com.infosupport.t2c3.service;
 
-import com.infosupport.t2c3.domain.customers.Customer;
+import com.infosupport.t2c3.domain.accounts.Customer;
 import com.infosupport.t2c3.security.SecurityService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;

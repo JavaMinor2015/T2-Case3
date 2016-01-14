@@ -1,4 +1,4 @@
-package com.infosupport.t2c3.domain.customers;
+package com.infosupport.t2c3.domain.accounts;
 
 import com.infosupport.t2c3.domain.abs.AbsEntity;
 import javax.persistence.Entity;

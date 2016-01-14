@@ -1,6 +1,7 @@
-package com.infosupport.t2c3.domain.customers;
+package com.infosupport.t2c3.domain.accounts;
 
 import com.infosupport.t2c3.domain.abs.AbsEntity;
+import com.infosupport.t2c3.domain.orders.Address;
 import com.infosupport.t2c3.domain.orders.Order;
 import java.util.List;
 import javax.persistence.CascadeType;
