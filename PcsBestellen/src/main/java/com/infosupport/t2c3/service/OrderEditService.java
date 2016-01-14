@@ -44,10 +44,8 @@ public class OrderEditService {
         return orderRepo.findOne(id);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<String> editOrderStatus(@RequestBody OrderStatus status, @PathVariable Long id) {
-        Order order = orderRepo.findOne(id);
-        order.setStatus(status);
+    @RequestMapping(method = RequestMethod.PUT, consumes = "application/json")
+    public ResponseEntity<String> editOrder(@RequestBody Order order) {
         orderRepo.save(order);
         return new ResponseEntity(HttpStatus.OK);
     }
