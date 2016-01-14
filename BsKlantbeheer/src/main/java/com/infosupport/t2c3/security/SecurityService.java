@@ -128,12 +128,11 @@ public class SecurityService {
      * @param customer customer with data to write to db.
      * @return token, so user is immediately logged in
      */
-    public String register(Customer customer) {
+    public void register(Customer customer) {
         Credentials oldCredentials = customer.getCredentials();
         Credentials newCredentials = createCredentials(oldCredentials.getUserName(), oldCredentials.getPassword());
 
         customer.setCredentials(newCredentials);
         customerRepo.save(customer);
-        return createToken(customer.getCredentials());
     }
 }

@@ -20,6 +20,10 @@ public class ProductService extends AbsRestService<Product> {
 
     private static final int ADD_PRODUCTS = 15;
 
+    //TODO remove with init method
+    @Autowired
+    private OrderService orderService;
+
     @Autowired
     private ProductRepository productRepo;
 
@@ -45,5 +49,6 @@ public class ProductService extends AbsRestService<Product> {
                     random.nextBoolean() ? "meme" : null
             ));
         }
+        orderService.init();
     }
 }

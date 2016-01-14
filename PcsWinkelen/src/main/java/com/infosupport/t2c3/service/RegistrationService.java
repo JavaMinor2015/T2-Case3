@@ -1,10 +1,11 @@
 package com.infosupport.t2c3.service;
 
 import com.infosupport.t2c3.domain.customers.Customer;
-import com.infosupport.t2c3.model.Token;
 import com.infosupport.t2c3.security.SecurityService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -25,10 +26,9 @@ public class RegistrationService {
      * @return token, so user is immediately logged in
      */
     @RequestMapping(value = "/register", method = RequestMethod.POST, consumes = "application/json")
-    public Token register(@RequestBody Customer customer) {
-        String tokenValue = securityService.register(customer);
-        Token token = new Token(tokenValue);
-        return token;
+    public ResponseEntity<String> register(@RequestBody Customer customer) {
+        securityService.register(customer);
+        return new ResponseEntity<String>(HttpStatus.OK);
     }
 
 }
