@@ -8,7 +8,9 @@ import lombok.Getter;
 @Getter
 public enum OrderStatus {
 
-    PLACED("placed");
+    PLACED("placed"),
+    REJECTED("rejected"),
+    SENT("sent");
 
     private final String status;
 
