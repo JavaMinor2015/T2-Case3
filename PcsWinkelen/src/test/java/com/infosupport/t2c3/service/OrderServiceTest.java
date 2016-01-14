@@ -1,20 +1,24 @@
 package com.infosupport.t2c3.service;
 
-import com.infosupport.t2c3.domain.customers.Customer;
+import com.infosupport.t2c3.domain.accounts.Customer;
 import com.infosupport.t2c3.domain.orders.Order;
 import com.infosupport.t2c3.domain.orders.OrderItem;
 import com.infosupport.t2c3.domain.products.Product;
+import com.infosupport.t2c3.exceptions.CaseException;
 import com.infosupport.t2c3.model.OrderRequest;
 import com.infosupport.t2c3.model.Token;
 import com.infosupport.t2c3.repositories.CustomerRepository;
 import com.infosupport.t2c3.repositories.OrderRepository;
 import com.infosupport.t2c3.repositories.ProductRepository;
+import com.infosupport.t2c3.repositories.SupplyHandler;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import junit.framework.TestCase;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -29,6 +33,7 @@ public class OrderServiceTest extends TestCase {
     private OrderService orderService;
     private OrderRepository mockedOrderRepo;
     private ProductRepository mockedProductRepo;
+    private SupplyHandler supplyHandler;
     private CustomerRepository mockedCustomerRepo;
 
     public void setUp() throws Exception {
@@ -42,7 +47,7 @@ public class OrderServiceTest extends TestCase {
 
         customer = new Customer();
         customer.setFirstName("testVoornaam");
-        customer.setOrders(new ArrayList());
+        customer.setOrders(new ArrayList<>());
 
         OrderItem item1 = new OrderItem(null, 2, p1);
         OrderItem item2 = new OrderItem(null, 3, p2);
@@ -58,35 +63,47 @@ public class OrderServiceTest extends TestCase {
         orderService = new OrderService();
         mockedOrderRepo = mock(OrderRepository.class);
         mockedProductRepo = mock(ProductRepository.class);
+        supplyHandler = mock(SupplyHandler.class);
         mockedCustomerRepo = mock(CustomerRepository.class);
 
-        when(p1.getId()).thenReturn(1l);
-        when(p2.getId()).thenReturn(2l);
-        when(p3.getId()).thenReturn(3l);
 
-        when(mockedProductRepo.findOne(1l)).thenReturn(p1);
-        when(mockedProductRepo.findOne(2l)).thenReturn(p2);
-        when(mockedProductRepo.findOne(3l)).thenReturn(p3);
+        when(p1.getId()).thenReturn(1L);
+        when(p2.getId()).thenReturn(2L);
+        when(p3.getId()).thenReturn(3L);
 
+        when(mockedProductRepo.findOne(1L)).thenReturn(p1);
+        when(mockedProductRepo.findOne(2L)).thenReturn(p2);
+        when(mockedProductRepo.findOne(3L)).thenReturn(p3);
+
+        when(supplyHandler.getUnitsLeft(any())).thenReturn(100);
+        when(supplyHandler.decreaseStock(any(), anyInt())).thenReturn(100);
         when(mockedCustomerRepo.findByCredentialsToken("TOKENFORCUSTOMER"))
                 .thenReturn(customer);
 
         orderService.setOrderRepo(mockedOrderRepo);
         orderService.setProductRepo(mockedProductRepo);
+        orderService.setSupplyHandler(supplyHandler);
         orderService.setCustomerRepo(mockedCustomerRepo);
-
     }
 
     public void testPlaceOrderWithToken(){
         assertTrue(customer.getOrders().size() == 0);
-        orderService.placeOrder(new OrderRequest(new Token("TOKENFORCUSTOMER", null), order));
+        try {
+            orderService.placeOrder(new OrderRequest(new Token("TOKENFORCUSTOMER", null), order));
+        } catch (CaseException e) {
+            fail();
+        }
         assertTrue(customer.getOrders().size() == 1 );
     }
 
     public void testPlaceOrderWithoutToken(){
 
         assertTrue(customer.getOrders().size() == 0);
-        orderService.placeOrder(new OrderRequest(null, order));
+        try {
+            orderService.placeOrder(new OrderRequest(null, order));
+        } catch (CaseException e) {
+            fail();
+        }
         assertTrue(customer.getOrders().size() == 0 );
     }
 
@@ -99,7 +116,11 @@ public class OrderServiceTest extends TestCase {
         Product p1 = mockedProductRepo.findOne(items.get(0).getProduct().getId());
         Product p2 = mockedProductRepo.findOne(items.get(1).getProduct().getId());
 
+        try {
         orderService.placeOrder(new OrderRequest(null, order));
+        } catch (CaseException e) {
+            fail();
+        }
 
         assertEquals(new BigDecimal(173.22).setScale(2, RoundingMode.HALF_UP), order.getItems().get(0).getPrice().setScale(2, RoundingMode.HALF_UP));
         assertEquals(new BigDecimal(20.57).setScale(2, RoundingMode.HALF_UP), order.getItems().get(1).getPrice().setScale(2, RoundingMode.HALF_UP));

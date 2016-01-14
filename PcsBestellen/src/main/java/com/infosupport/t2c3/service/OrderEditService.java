@@ -45,12 +45,15 @@ public class OrderEditService {
 
     /**
      * Edit an order.
+     *
      * @param order the order to be edited
      * @return response 200 OK
      */
+    //TODO: Convert this to PUT /employeeorder/{ID}
     @RequestMapping(method = RequestMethod.PUT, consumes = "application/json")
     public ResponseEntity<String> editOrder(@RequestBody Order order) {
         orderRepo.save(order);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
+
 }

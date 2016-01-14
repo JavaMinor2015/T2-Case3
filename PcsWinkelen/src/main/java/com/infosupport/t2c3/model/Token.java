@@ -1,6 +1,6 @@
 package com.infosupport.t2c3.model;
 
-import com.infosupport.t2c3.domain.customers.Customer;
+import com.infosupport.t2c3.domain.accounts.Customer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

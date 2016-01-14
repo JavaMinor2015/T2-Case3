@@ -1,7 +1,7 @@
 package com.infosupport.t2c3.security;
 
-import com.infosupport.t2c3.domain.customers.Credentials;
-import com.infosupport.t2c3.domain.customers.Customer;
+import com.infosupport.t2c3.domain.accounts.Credentials;
+import com.infosupport.t2c3.domain.accounts.Customer;
 import com.infosupport.t2c3.repositories.CredentialsRepository;
 import com.infosupport.t2c3.repositories.CustomerRepository;
 import com.sun.org.apache.xerces.internal.impl.dv.util.HexBin;
