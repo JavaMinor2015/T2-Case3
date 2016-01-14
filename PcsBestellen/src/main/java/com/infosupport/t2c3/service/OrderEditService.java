@@ -1,10 +1,13 @@
 package com.infosupport.t2c3.service;
 
 import com.infosupport.t2c3.domain.orders.Order;
+import com.infosupport.t2c3.domain.orders.OrderStatus;
 import com.infosupport.t2c3.repositories.OrderRepository;
 import java.util.List;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -32,11 +35,20 @@ public class OrderEditService {
 
     /**
      * Get one order by a id.
+     *
      * @param id the order id
      * @return the order
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Order getOrderById(@PathVariable Long id) {
         return orderRepo.findOne(id);
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<String> editOrderStatus(@RequestBody OrderStatus status, @PathVariable Long id) {
+        Order order = orderRepo.findOne(id);
+        order.setStatus(status);
+        orderRepo.save(order);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }
