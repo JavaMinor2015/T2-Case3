@@ -1,7 +1,6 @@
 package com.infosupport.t2c3.service;
 
 import com.infosupport.t2c3.domain.orders.Order;
-import com.infosupport.t2c3.domain.orders.OrderStatus;
 import com.infosupport.t2c3.repositories.OrderRepository;
 import java.util.List;
 import lombok.Setter;
@@ -44,6 +43,11 @@ public class OrderEditService {
         return orderRepo.findOne(id);
     }
 
+    /**
+     * Edit an order.
+     * @param order the order to be edited
+     * @return response 200 OK
+     */
     @RequestMapping(method = RequestMethod.PUT, consumes = "application/json")
     public ResponseEntity<String> editOrder(@RequestBody Order order) {
         orderRepo.save(order);

@@ -100,13 +100,17 @@ public class OrderService {
         //TODO: Remove this, is just adding random data
         SecureRandom random = new SecureRandom();
 
+        final int MAX_FIFTEEN = 15;
+        final int MAX_FOUR = 4;
+        final int MAX_THREE = 3;
+
         for (int i = 0; i < 2; i++) {
             List<OrderItem> items = new ArrayList<>();
-            for (int a = 0; a < 3; a++) {
+            for (int a = 0; a < MAX_THREE; a++) {
                 items.add(new OrderItem(
                         null,
-                        random.nextInt(4) + 1,
-                        productRepo.findOne(Long.valueOf(random.nextInt(15) + 1))
+                        random.nextInt(MAX_FOUR) + 1,
+                        productRepo.findOne((long) random.nextInt(MAX_FIFTEEN) + 1)
                 ));
             }
 
