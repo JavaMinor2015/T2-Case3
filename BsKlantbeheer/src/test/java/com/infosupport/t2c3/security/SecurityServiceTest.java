@@ -67,7 +67,7 @@ public class SecurityServiceTest extends TestCase {
 
     }
 
-    public void testVerifyUnknownUserName(){
+    public void testVerifyUnknownUserName() {
 
         assertEquals(customer.getCredentials().getToken(), "");
 
@@ -76,7 +76,7 @@ public class SecurityServiceTest extends TestCase {
         assertEquals(customer.getCredentials().getToken(), "");
     }
 
-    public void testVerifyIncorrectPassword(){
+    public void testVerifyIncorrectPassword() {
 
         assertEquals(customer.getCredentials().getToken(), "");
 
@@ -85,7 +85,7 @@ public class SecurityServiceTest extends TestCase {
         assertEquals(customer.getCredentials().getToken(), "");
     }
 
-    public void testVerifyWrongUserNameAndPassword(){
+    public void testVerifyWrongUserNameAndPassword() {
 
         assertEquals(customer.getCredentials().getToken(), "");
 
@@ -112,8 +112,7 @@ public class SecurityServiceTest extends TestCase {
         customer.setCredentials(expected);
         customer.setFirstName("testFirstName");
         customer.setLastName("testLastName");
-
-        assertFalse(service.register(customer).equals(""));
+        service.register(customer);
 
         assertFalse(customer.getCredentials().getPassword().equals(expected.getPassword()));
     }
