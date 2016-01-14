@@ -31,6 +31,13 @@
             <version>1.3.1.RELEASE</version>
         </dependency>
 
+        <!-- Log4J -->
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+
 
         <dependency>
             <groupId>com.h2database</groupId>
@@ -46,6 +53,13 @@
         </dependency>
         -->
 
+
+        <!-- Mockito -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.9.5</version>
+        </dependency>
 
         <!-- REST depedencies -->
         <dependency>
@@ -63,6 +77,14 @@
             <artifactId>spring-boot-starter-jersey</artifactId>
             <version>1.3.1.RELEASE</version>
         </dependency>
+
+        <!-- Common codec -->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.10</version>
+        </dependency>
+
 
         <!-- Test dependencies -->
         <dependency>

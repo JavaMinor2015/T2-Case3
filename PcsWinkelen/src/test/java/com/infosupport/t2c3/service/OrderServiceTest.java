@@ -1,9 +1,13 @@
 package com.infosupport.t2c3.service;
 
+import com.infosupport.t2c3.domain.customers.Customer;
 import com.infosupport.t2c3.domain.orders.Order;
 import com.infosupport.t2c3.domain.orders.OrderItem;
 import com.infosupport.t2c3.domain.products.Product;
 import com.infosupport.t2c3.exceptions.CaseException;
+import com.infosupport.t2c3.model.OrderRequest;
+import com.infosupport.t2c3.model.Token;
+import com.infosupport.t2c3.repositories.CustomerRepository;
 import com.infosupport.t2c3.repositories.OrderRepository;
 import com.infosupport.t2c3.repositories.ProductRepository;
 import com.infosupport.t2c3.repositories.SupplyHandler;
@@ -24,11 +28,13 @@ import static org.mockito.Mockito.when;
 public class OrderServiceTest extends TestCase {
 
     private Order order;
+    private Customer customer;
     private List<OrderItem> items;
     private OrderService orderService;
     private OrderRepository mockedOrderRepo;
     private ProductRepository mockedProductRepo;
     private SupplyHandler supplyHandler;
+    private CustomerRepository mockedCustomerRepo;
 
     public void setUp() throws Exception {
         super.setUp();
@@ -38,6 +44,10 @@ public class OrderServiceTest extends TestCase {
         when(p2.getPrice()).thenReturn(new BigDecimal(20.57));
         Product p3 = mock(Product.class);
         when(p3.getPrice()).thenReturn(new BigDecimal(0.89));
+
+        customer = new Customer();
+        customer.setFirstName("testVoornaam");
+        customer.setOrders(new ArrayList());
 
         OrderItem item1 = new OrderItem(null, 2, p1);
         OrderItem item2 = new OrderItem(null, 3, p2);
@@ -54,6 +64,7 @@ public class OrderServiceTest extends TestCase {
         mockedOrderRepo = mock(OrderRepository.class);
         mockedProductRepo = mock(ProductRepository.class);
         supplyHandler = mock(SupplyHandler.class);
+        mockedCustomerRepo = mock(CustomerRepository.class);
 
 
         when(p1.getId()).thenReturn(1l);
@@ -66,10 +77,34 @@ public class OrderServiceTest extends TestCase {
 
         when(supplyHandler.getUnitsLeft(any())).thenReturn(100);
         when(supplyHandler.decreaseStock(any(), anyInt())).thenReturn(100);
+        when(mockedCustomerRepo.findByCredentialsToken("TOKENFORCUSTOMER"))
+                .thenReturn(customer);
 
         orderService.setOrderRepo(mockedOrderRepo);
         orderService.setProductRepo(mockedProductRepo);
         orderService.setSupplyHandler(supplyHandler);
+        orderService.setCustomerRepo(mockedCustomerRepo);
+    }
+
+    public void testPlaceOrderWithToken(){
+        assertTrue(customer.getOrders().size() == 0);
+        try {
+            orderService.placeOrder(new OrderRequest(new Token("TOKENFORCUSTOMER", null), order));
+        } catch (CaseException e) {
+            fail();
+        }
+        assertTrue(customer.getOrders().size() == 1 );
+    }
+
+    public void testPlaceOrderWithoutToken(){
+
+        assertTrue(customer.getOrders().size() == 0);
+        try {
+            orderService.placeOrder(new OrderRequest(null, order));
+        } catch (CaseException e) {
+            fail();
+        }
+        assertTrue(customer.getOrders().size() == 0 );
     }
 
     public void testCalculatePrices(){
@@ -82,7 +117,7 @@ public class OrderServiceTest extends TestCase {
         Product p2 = mockedProductRepo.findOne(items.get(1).getProduct().getId());
 
         try {
-            orderService.placeOrder(order);
+        orderService.placeOrder(new OrderRequest(null, order));
         } catch (CaseException e) {
             fail();
         }

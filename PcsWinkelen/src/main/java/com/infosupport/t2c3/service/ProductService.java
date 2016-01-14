@@ -23,6 +23,10 @@ public class ProductService extends AbsRestService<Product> {
     private static final int ADD_PRODUCTS = 15;
     private static final int DEFAULT_SUPPLY = 15;
 
+    //TODO remove with init method
+    @Autowired
+    private OrderService orderService;
+
     @Autowired
     private ProductRepository productRepo;
 
@@ -53,5 +57,6 @@ public class ProductService extends AbsRestService<Product> {
             Supply supply = new Supply(p, DEFAULT_SUPPLY, "Supplier " + (random.nextBoolean() ? "X" : "Y"));
             supplyRepo.save(supply);
         }
+        orderService.init();
     }
 }
