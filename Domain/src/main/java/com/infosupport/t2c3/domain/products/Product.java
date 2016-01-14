@@ -24,8 +24,6 @@ public class Product extends AbsEntity {
     private BigDecimal price;
     @Enumerated(EnumType.STRING)
     private Category category;
-    private String supplier;
-    private boolean available;
     private String imageURL;
 
 }

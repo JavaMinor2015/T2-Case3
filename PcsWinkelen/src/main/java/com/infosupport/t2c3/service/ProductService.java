@@ -3,7 +3,9 @@ package com.infosupport.t2c3.service;
 import com.infosupport.t2c3.data.BasicRepository;
 import com.infosupport.t2c3.domain.products.Category;
 import com.infosupport.t2c3.domain.products.Product;
+import com.infosupport.t2c3.domain.products.Supply;
 import com.infosupport.t2c3.repositories.ProductRepository;
+import com.infosupport.t2c3.repositories.SupplyRepository;
 import java.math.BigDecimal;
 import java.security.SecureRandom;
 import javax.annotation.PostConstruct;
@@ -19,9 +21,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductService extends AbsRestService<Product> {
 
     private static final int ADD_PRODUCTS = 15;
+    private static final int DEFAULT_SUPPLY = 15;
+
+    //TODO remove with init method
+    @Autowired
+    private OrderService orderService;
 
     @Autowired
     private ProductRepository productRepo;
+
+    //TODO: Remove this, is only used for test data
+    @Autowired
+    private SupplyRepository supplyRepo;
 
     @Override
     public BasicRepository<Product> provideRepo() {
@@ -36,14 +47,16 @@ public class ProductService extends AbsRestService<Product> {
         //TODO: Remove this, is just adding random data
         SecureRandom random = new SecureRandom();
         for (int i = 0; i < ADD_PRODUCTS; i++) {
-            productRepo.save(new Product(
+            Product p = new Product(
                     "Thing #" + random.nextInt(),
                     new BigDecimal(random.nextDouble()),
                     random.nextBoolean() ? Category.BICYCLE : Category.PART,
-                    "Meme",
-                    true,
                     random.nextBoolean() ? "meme" : null
-            ));
+            );
+
+            Supply supply = new Supply(p, DEFAULT_SUPPLY, "Supplier " + (random.nextBoolean() ? "X" : "Y"));
+            supplyRepo.save(supply);
         }
+        orderService.init();
     }
 }

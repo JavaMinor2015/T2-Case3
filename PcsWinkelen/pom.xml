@@ -12,12 +12,6 @@
     <artifactId>pcs-winkelen</artifactId>
 
     <dependencies>
-        <!-- BsCatalogus -->
-        <dependency>
-            <groupId>com.infosupport.t2c3</groupId>
-            <artifactId>bs-catalogus</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
         <dependency>
             <groupId>com.infosupport.t2c3</groupId>
             <artifactId>domain</artifactId>
@@ -25,9 +19,26 @@
         </dependency>
         <dependency>
             <groupId>com.infosupport.t2c3</groupId>
+            <artifactId>bs-catalogus</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.infosupport.t2c3</groupId>
             <artifactId>bs-bestellingbeheer</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.infosupport.t2c3</groupId>
+            <artifactId>bs-voorraadbeheer</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.infosupport.t2c3</groupId>
+            <artifactId>bs-klantbeheer</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
     </dependencies>
 
 </project>

@@ -1,13 +1,13 @@
 package com.infosupport.t2c3.domain.orders;
 
 import com.infosupport.t2c3.domain.abs.AbsEntity;
-import com.infosupport.t2c3.domain.customers.CustomerData;
 import java.math.BigDecimal;
 import java.util.List;
 import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * Class that combines all data to create an order.
@@ -23,8 +23,10 @@ public class Order extends AbsEntity {
 
     private static final long serialVersionUID = 3562382393047819011L;
 
+    @Setter
     private BigDecimal totalPrice;
     @Enumerated(EnumType.STRING)
+    @Setter
     private OrderStatus status;
     @OneToMany(cascade = CascadeType.PERSIST)
     private List<OrderItem> items;
