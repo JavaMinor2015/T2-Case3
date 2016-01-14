@@ -41,6 +41,11 @@ public class OrderService {
     @Autowired
     private CustomerRepository customerRepo;
 
+    //TODO remove with init method
+    private static final int MAX_FIFTEEN = 15;
+    private static final int MAX_FOUR = 4;
+    private static final int MAX_THREE = 3;
+
 
     /**
      * Get all the orders from the repo.
@@ -99,10 +104,6 @@ public class OrderService {
     public void init() {
         //TODO: Remove this, is just adding random data
         SecureRandom random = new SecureRandom();
-
-        final int MAX_FIFTEEN = 15;
-        final int MAX_FOUR = 4;
-        final int MAX_THREE = 3;
 
         for (int i = 0; i < 2; i++) {
             List<OrderItem> items = new ArrayList<>();
