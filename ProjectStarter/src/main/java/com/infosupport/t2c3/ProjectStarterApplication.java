@@ -9,11 +9,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 /**
  * Spring Application.
  */
-@EnableJpaRepositories("com.infosupport.t2c3.repositories")
-@EntityScan("com.infosupport.t2c3.domain")
-@ComponentScan("com.infosupport.t2c3.service")
-@SpringBootApplication
-@SuppressWarnings("squid:S1118")
 public class ProjectStarterApplication {
 
     /**
@@ -22,7 +17,7 @@ public class ProjectStarterApplication {
      * @param args Possible command line arguments
      */
     public static void main(String[] args) {
-        SpringApplication.run(ProjectStarterApplication.class, args);
+        SpringApplication.run(Config.class, args);
     }
 
 }
