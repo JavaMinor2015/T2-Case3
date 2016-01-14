@@ -56,6 +56,7 @@ public class LoginService {
         String tokenValue = securityService.verify(credentials.getUserName(), credentials.getPassword());
         if (!tokenValue.isEmpty()) {
             Customer customer = customerRepo.findByCredentialsUserName(credentials.getUserName());
+            //TODO instead exclude credentials in output
             customer.setCredentials(null);
             token = new Token(tokenValue, customer);
             return new ResponseEntity<>(token, HttpStatus.OK);
