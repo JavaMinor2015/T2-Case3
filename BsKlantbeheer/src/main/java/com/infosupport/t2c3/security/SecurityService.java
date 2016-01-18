@@ -143,4 +143,10 @@ public class SecurityService {
 
         customerRepo.save(customer);
     }
+
+    public boolean checkTokenForCustomer(Long customerId, String tokenValue){
+        Customer customer = customerRepo.findByCredentialsToken(tokenValue);
+
+        return customer != null && customer.getId().equals(customerId);
+    }
 }

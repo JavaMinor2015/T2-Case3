@@ -7,8 +7,11 @@ import com.infosupport.t2c3.domain.orders.Order;
 import com.infosupport.t2c3.repositories.CredentialsRepository;
 import com.infosupport.t2c3.repositories.CustomerRepository;
 import com.infosupport.t2c3.repositories.OrderRepository;
+import com.infosupport.t2c3.security.SecurityService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -28,6 +31,9 @@ public class CustomerService extends AbsRestService<Customer> {
     @Autowired
     private CredentialsRepository credentialsRepo;
 
+    @Autowired
+    private SecurityService securityService;
+
     //TODO remove
     @RequestMapping(value = "/credentials", method = RequestMethod.GET)
     public List<Credentials> getAllCredentials() {
@@ -40,10 +46,13 @@ public class CustomerService extends AbsRestService<Customer> {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}/orders")
-    public List<Order> getAllOrdersForCustomer(@RequestHeader(value = "tokenValue") String tokenValue, @PathVariable Long id){
+    public ResponseEntity<List<Order>> getAllOrdersForCustomer(@RequestHeader(value = "tokenValue") String tokenValue, @PathVariable Long id) {
         Customer customer = customerRepo.findOne(id);
         System.out.println(tokenValue);
-        return customer.getOrders();
+        if (securityService.checkTokenForCustomer(id, tokenValue)) {
+            return new ResponseEntity(customer.getOrders(), HttpStatus.OK);
+        }
+        return new ResponseEntity(HttpStatus.UNAUTHORIZED);
     }
 
 }
