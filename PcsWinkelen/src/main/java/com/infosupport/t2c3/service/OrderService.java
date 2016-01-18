@@ -5,6 +5,7 @@ import com.infosupport.t2c3.domain.orders.*;
 import com.infosupport.t2c3.domain.products.Product;
 import com.infosupport.t2c3.exceptions.CaseException;
 import com.infosupport.t2c3.exceptions.ItemNotFoundException;
+import com.infosupport.t2c3.exceptions.NoSupplyException;
 import com.infosupport.t2c3.model.OrderRequest;
 import com.infosupport.t2c3.repositories.CustomerRepository;
 import com.infosupport.t2c3.repositories.OrderRepository;
@@ -76,8 +77,12 @@ public class OrderService {
 
         //Decrease Supply
         for (OrderItem orderItem : newOrder.getItems()) {
-            supplyHandler.decreaseStock(orderItem.getProduct(), orderItem.getAmount());
-        }
+            try {
+                supplyHandler.decreaseStock(orderItem.getProduct(), orderItem.getAmount());
+            }catch(NoSupplyException e){
+                return new ResponseEntity<String>("Insuffient supply", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            }
 
         //Save the order
         orderRepo.save(newOrder);
