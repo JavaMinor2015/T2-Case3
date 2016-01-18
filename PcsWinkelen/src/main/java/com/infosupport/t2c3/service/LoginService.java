@@ -6,7 +6,6 @@ import com.infosupport.t2c3.model.Token;
 import com.infosupport.t2c3.repositories.CredentialsRepository;
 import com.infosupport.t2c3.repositories.CustomerRepository;
 import com.infosupport.t2c3.security.SecurityService;
-import java.util.List;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,18 +30,6 @@ public class LoginService {
 
     @Autowired
     private SecurityService securityService;
-
-    //TODO remove
-    @RequestMapping(value = "", method = RequestMethod.GET)
-    public List<Credentials> getAllCredentials() {
-        return repo.findAll();
-    }
-
-    //TODO remove
-    @RequestMapping(value = "/customers", method = RequestMethod.GET)
-    public List<Customer> getAllCustomers() {
-        return customerRepo.findAll();
-    }
 
     /**
      * Log a customer in using his/her credentials.

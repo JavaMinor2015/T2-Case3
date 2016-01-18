@@ -6,15 +6,15 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 /**
  * Created by Stoux on 13/01/2016.
  */
-@ResponseStatus(HttpStatus.NOT_FOUND)
-public class ItemNotFoundException extends CaseException {
+@ResponseStatus(HttpStatus.CONFLICT)
+public class NonUniqueValueException extends CaseException {
 
     /**
      * Item not found exception constructor.
      *
      * @param message The message
      */
-    public ItemNotFoundException(String message) {
+    public NonUniqueValueException(String message) {
         super(message);
     }
 

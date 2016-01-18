@@ -112,6 +112,10 @@ public class SecurityServiceTest extends TestCase {
         customer.setCredentials(expected);
         customer.setFirstName("testFirstName");
         customer.setLastName("testLastName");
+
+        when(customerRepo.findByCredentialsUserName("testUserName"))
+                .thenReturn(null);
+
         service.register(customer);
 
         assertFalse(customer.getCredentials().getPassword().equals(expected.getPassword()));
