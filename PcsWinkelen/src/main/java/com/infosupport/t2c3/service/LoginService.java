@@ -32,18 +32,6 @@ public class LoginService {
     @Autowired
     private SecurityService securityService;
 
-    //TODO remove
-    @RequestMapping(value = "", method = RequestMethod.GET)
-    public List<Credentials> getAllCredentials() {
-        return repo.findAll();
-    }
-
-    //TODO remove
-    @RequestMapping(value = "/customers", method = RequestMethod.GET)
-    public List<Customer> getAllCustomers() {
-        return customerRepo.findAll();
-    }
-
     /**
      * Log a customer in using his/her credentials.
      *
