@@ -10,12 +10,16 @@ import lombok.Getter;
 @MappedSuperclass
 public abstract class AbsVaultEntity extends AbsEntity implements DataVaultEnabled {
 
+    /* Most useless constant ever */
+    private static final int THREE_DIGITS = 3;
+
     @Getter
     private String businessKey;
 
     /**
      * Fill the business key field if it's not set yet.
      */
+    @SuppressWarnings("squid:UnusedPrivateMethod")
     @PrePersist
     private void fillBusinessKey() {
         if (businessKey == null) {
@@ -41,7 +45,7 @@ public abstract class AbsVaultEntity extends AbsEntity implements DataVaultEnabl
      */
     protected String asThreeDigits(String thing) {
         int thingLength = thing.length();
-        String result = thing.substring(0, thingLength < 3 ? thingLength : 3);
+        String result = thing.substring(0, thingLength < THREE_DIGITS ? thingLength : THREE_DIGITS);
         return result.toUpperCase();
     }
 

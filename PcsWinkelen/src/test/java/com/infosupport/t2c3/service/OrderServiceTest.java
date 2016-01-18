@@ -4,6 +4,7 @@ import com.infosupport.t2c3.domain.accounts.Customer;
 import com.infosupport.t2c3.domain.orders.Order;
 import com.infosupport.t2c3.domain.orders.OrderItem;
 import com.infosupport.t2c3.domain.products.Product;
+import com.infosupport.t2c3.esb.DataVaultService;
 import com.infosupport.t2c3.exceptions.CaseException;
 import com.infosupport.t2c3.exceptions.NoCreditException;
 import com.infosupport.t2c3.model.OrderRequest;
@@ -36,6 +37,7 @@ public class OrderServiceTest extends TestCase {
     private ProductRepository mockedProductRepo;
     private SupplyHandler supplyHandler;
     private CustomerRepository mockedCustomerRepo;
+    private DataVaultService mockedDataVaultService;
 
     public void setUp() throws Exception {
         super.setUp();
@@ -67,6 +69,7 @@ public class OrderServiceTest extends TestCase {
         mockedProductRepo = mock(ProductRepository.class);
         supplyHandler = mock(SupplyHandler.class);
         mockedCustomerRepo = mock(CustomerRepository.class);
+        mockedDataVaultService = mock(DataVaultService.class);
 
 
         when(p1.getId()).thenReturn(1L);
@@ -86,6 +89,7 @@ public class OrderServiceTest extends TestCase {
         orderService.setProductRepo(mockedProductRepo);
         orderService.setSupplyHandler(supplyHandler);
         orderService.setCustomerRepo(mockedCustomerRepo);
+        orderService.setDataVaultService(mockedDataVaultService);
     }
 
     public void testPlaceOrderWithToken(){
