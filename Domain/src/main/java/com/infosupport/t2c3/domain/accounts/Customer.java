@@ -3,6 +3,7 @@ package com.infosupport.t2c3.domain.accounts;
 import com.infosupport.t2c3.domain.abs.AbsEntity;
 import com.infosupport.t2c3.domain.orders.Address;
 import com.infosupport.t2c3.domain.orders.Order;
+import java.math.BigDecimal;
 import java.util.List;
 import javax.persistence.*;
 import lombok.Getter;
@@ -21,6 +22,9 @@ public class Customer extends AbsEntity {
     private String firstName;
     private String lastName;
     private String emailAddress;
+
+    private BigDecimal creditLimit;
+
     @OneToOne(cascade = CascadeType.PERSIST)
     private Address address;
     @OneToOne(cascade = CascadeType.PERSIST)
@@ -36,4 +40,5 @@ public class Customer extends AbsEntity {
     public void addOrder(Order order) {
         orders.add(order);
     }
+
 }

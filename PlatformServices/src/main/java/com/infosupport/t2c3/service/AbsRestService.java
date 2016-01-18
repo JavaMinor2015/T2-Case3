@@ -28,7 +28,7 @@ public abstract class AbsRestService<X extends AbsEntity> {
      * @return the value or null
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public X getById(@PathVariable("id") final long id) {
+    public X getById(@PathVariable("id") final long id)  {
         return repo.findOne(id);
     }
 

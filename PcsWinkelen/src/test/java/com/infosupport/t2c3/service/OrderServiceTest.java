@@ -5,6 +5,7 @@ import com.infosupport.t2c3.domain.orders.Order;
 import com.infosupport.t2c3.domain.orders.OrderItem;
 import com.infosupport.t2c3.domain.products.Product;
 import com.infosupport.t2c3.exceptions.CaseException;
+import com.infosupport.t2c3.exceptions.NoCreditException;
 import com.infosupport.t2c3.model.OrderRequest;
 import com.infosupport.t2c3.model.Token;
 import com.infosupport.t2c3.repositories.CustomerRepository;
@@ -47,6 +48,7 @@ public class OrderServiceTest extends TestCase {
 
         customer = new Customer();
         customer.setFirstName("testVoornaam");
+        customer.setCreditLimit(new BigDecimal(5000));
         customer.setOrders(new ArrayList<>());
 
         OrderItem item1 = new OrderItem(null, 2, p1);
@@ -101,8 +103,11 @@ public class OrderServiceTest extends TestCase {
         assertTrue(customer.getOrders().size() == 0);
         try {
             orderService.placeOrder(new OrderRequest(null, order));
-        } catch (CaseException e) {
             fail();
+        } catch (CaseException e) {
+            if (!(e instanceof NoCreditException)) {
+                fail();
+            }
         }
         assertTrue(customer.getOrders().size() == 0 );
     }
@@ -117,9 +122,9 @@ public class OrderServiceTest extends TestCase {
         Product p2 = mockedProductRepo.findOne(items.get(1).getProduct().getId());
 
         try {
-        orderService.placeOrder(new OrderRequest(null, order));
+            orderService.placeOrder(new OrderRequest(new Token("TOKENFORCUSTOMER", null), order));
         } catch (CaseException e) {
-            fail();
+            fail("Unable to place order: " + e.getMessage());
         }
 
         assertEquals(new BigDecimal(173.22).setScale(2, RoundingMode.HALF_UP), order.getItems().get(0).getPrice().setScale(2, RoundingMode.HALF_UP));

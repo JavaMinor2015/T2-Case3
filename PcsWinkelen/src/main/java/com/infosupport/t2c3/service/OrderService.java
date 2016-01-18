@@ -5,6 +5,7 @@ import com.infosupport.t2c3.domain.orders.*;
 import com.infosupport.t2c3.domain.products.Product;
 import com.infosupport.t2c3.exceptions.CaseException;
 import com.infosupport.t2c3.exceptions.ItemNotFoundException;
+import com.infosupport.t2c3.exceptions.NoCreditException;
 import com.infosupport.t2c3.model.OrderRequest;
 import com.infosupport.t2c3.repositories.CustomerRepository;
 import com.infosupport.t2c3.repositories.OrderRepository;
@@ -14,6 +15,7 @@ import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import lombok.Setter;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -31,6 +33,8 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 @Setter
 public class OrderService {
+
+    public static final BigDecimal DEFAULT_CREDIT_LIMIT = new BigDecimal(100);
 
     //TODO remove with init function
     private static final int MAX_FIFTEEN = 15;
@@ -73,6 +77,19 @@ public class OrderService {
         Order newOrder = calculatePrices(orderRequest.getOrder());
         newOrder.setStatus(OrderStatus.PLACED);
 
+        //Check for Customer
+        Optional<Customer> customerOptional;
+        if (orderRequest.getToken() != null && orderRequest.getToken().getValue() != null) {
+            Customer customer = customerRepo.findByCredentialsToken(orderRequest.getToken().getValue());
+            testCreditLimit(newOrder, customer.getCreditLimit());
+            customerOptional = Optional.of(customer);
+        } else {
+            //Default Credit Limit applies
+            testCreditLimit(newOrder, DEFAULT_CREDIT_LIMIT);
+            customerOptional = Optional.empty();
+        }
+
+
         //Decrease Supply
         for (OrderItem orderItem : newOrder.getItems()) {
             supplyHandler.decreaseStock(orderItem.getProduct(), orderItem.getAmount());
@@ -81,8 +98,9 @@ public class OrderService {
         //Save the order
         orderRepo.save(newOrder);
 
-        if (orderRequest.getToken() != null && orderRequest.getToken().getValue() != null) {
-            Customer customer = customerRepo.findByCredentialsToken(orderRequest.getToken().getValue());
+        //Add the customer if present
+        if (customerOptional.isPresent()) {
+            Customer customer = customerOptional.get();
             customer.addOrder(orderRequest.getOrder());
             customerRepo.save(customer);
         }
@@ -113,6 +131,19 @@ public class OrderService {
             order.setTotalPrice(totalPrice);
         }
         return order;
+    }
+
+    /**
+     * Test is if this order surpasses the credit limit.
+     *
+     * @param order The order
+     * @param maxCreditLimit The maximum limit
+     * @throws NoCreditException if the credit limit is exceeded
+     */
+    private void testCreditLimit(Order order, BigDecimal maxCreditLimit) throws NoCreditException {
+        if (order.getTotalPrice().compareTo(maxCreditLimit) == 1) {
+            throw new NoCreditException(maxCreditLimit);
+        }
     }
 
     /**
