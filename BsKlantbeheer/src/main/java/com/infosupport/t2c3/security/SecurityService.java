@@ -2,6 +2,7 @@ package com.infosupport.t2c3.security;
 
 import com.infosupport.t2c3.domain.accounts.Credentials;
 import com.infosupport.t2c3.domain.accounts.Customer;
+import com.infosupport.t2c3.exceptions.NonUniqueValueException;
 import com.infosupport.t2c3.repositories.CredentialsRepository;
 import com.infosupport.t2c3.repositories.CustomerRepository;
 import com.sun.org.apache.xerces.internal.impl.dv.util.HexBin;
@@ -128,11 +129,18 @@ public class SecurityService {
      * @param customer customer with data to write to db.
      * @return token, so user is immediately logged in
      */
-    public void register(Customer customer) {
+    public void register(Customer customer) throws NonUniqueValueException {
         Credentials oldCredentials = customer.getCredentials();
+
+        Customer cust = customerRepo.findByCredentialsUserName(oldCredentials.getUserName());
+        if(cust != null){
+            throw new NonUniqueValueException("Already a customer with this username");
+        }
+
         Credentials newCredentials = createCredentials(oldCredentials.getUserName(), oldCredentials.getPassword());
 
         customer.setCredentials(newCredentials);
+
         customerRepo.save(customer);
     }
 }

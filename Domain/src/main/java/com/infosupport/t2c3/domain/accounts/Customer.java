@@ -4,10 +4,7 @@ import com.infosupport.t2c3.domain.abs.AbsEntity;
 import com.infosupport.t2c3.domain.orders.Address;
 import com.infosupport.t2c3.domain.orders.Order;
 import java.util.List;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
