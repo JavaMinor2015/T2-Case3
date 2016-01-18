@@ -5,7 +5,6 @@ import com.infosupport.t2c3.domain.orders.*;
 import com.infosupport.t2c3.domain.products.Product;
 import com.infosupport.t2c3.exceptions.CaseException;
 import com.infosupport.t2c3.exceptions.ItemNotFoundException;
-import com.infosupport.t2c3.exceptions.NoSupplyException;
 import com.infosupport.t2c3.model.OrderRequest;
 import com.infosupport.t2c3.repositories.CustomerRepository;
 import com.infosupport.t2c3.repositories.OrderRepository;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 /**
  * Created by Windows 7 on 6-1-2016.
  */
-
 @RestController
 @RequestMapping(value = "/order", produces = "application/json")
 @CrossOrigin
@@ -77,12 +75,8 @@ public class OrderService {
 
         //Decrease Supply
         for (OrderItem orderItem : newOrder.getItems()) {
-            try {
-                supplyHandler.decreaseStock(orderItem.getProduct(), orderItem.getAmount());
-            }catch(NoSupplyException e){
-                return new ResponseEntity<String>("Insuffient supply", HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-            }
+            supplyHandler.decreaseStock(orderItem.getProduct(), orderItem.getAmount());
+        }
 
         //Save the order
         orderRepo.save(newOrder);
