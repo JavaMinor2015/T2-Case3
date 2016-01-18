@@ -134,6 +134,13 @@ public class OrderService {
         return order;
     }
 
+    /**
+     * Test is if this order surpasses the credit limit.
+     *
+     * @param order The order
+     * @param maxCreditLimit The maximum limit
+     * @throws NoCreditException if the credit limit is exceeded
+     */
     private void testCreditLimit(Order order, BigDecimal maxCreditLimit) throws NoCreditException {
         if (order.getTotalPrice().compareTo(maxCreditLimit) == 1) {
             throw new NoCreditException(maxCreditLimit);

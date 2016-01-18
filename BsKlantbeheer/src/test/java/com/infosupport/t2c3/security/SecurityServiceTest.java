@@ -4,11 +4,11 @@ import com.infosupport.t2c3.domain.accounts.Credentials;
 import com.infosupport.t2c3.domain.accounts.Customer;
 import com.infosupport.t2c3.repositories.CredentialsRepository;
 import com.infosupport.t2c3.repositories.CustomerRepository;
-import com.sun.org.apache.xerces.internal.impl.dv.util.HexBin;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import junit.framework.TestCase;
+import org.apache.commons.codec.binary.Hex;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -126,7 +126,7 @@ public class SecurityServiceTest extends TestCase {
         }
         String hashedString = "";
         if (mda != null) {
-            hashedString = HexBin.encode(mda.digest(toHash.getBytes(Charset.forName("UTF-8"))));
+            hashedString = Hex.encodeHexString(mda.digest(toHash.getBytes(Charset.forName("UTF-8"))));
         }
         return hashedString;
     }

@@ -4,13 +4,14 @@ import com.infosupport.t2c3.domain.accounts.Credentials;
 import com.infosupport.t2c3.domain.accounts.Customer;
 import com.infosupport.t2c3.repositories.CredentialsRepository;
 import com.infosupport.t2c3.repositories.CustomerRepository;
-import com.sun.org.apache.xerces.internal.impl.dv.util.HexBin;
+import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import javax.annotation.PostConstruct;
 import lombok.Setter;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,10 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class SecurityService {
+
+    //TODO: Remove
+    public static final BigDecimal TEST_CREDIT_LIMIT = new BigDecimal(500);
+
 
     private static final int RANDOM_MIN = 12345;
     private static final Logger LOGGER = Logger.getLogger(SecurityService.class.getName());
@@ -83,9 +88,11 @@ public class SecurityService {
      */
     @PostConstruct
     public void init() {
+        //TODO: Remove
         Customer cust = new Customer();
         cust.setFirstName("Remco");
         cust.setLastName("Groenenboom");
+        cust.setCreditLimit(TEST_CREDIT_LIMIT);
         cust.setCredentials(createCredentials("remco", "password"));
         customerRepo.save(cust);
     }
@@ -105,7 +112,7 @@ public class SecurityService {
         }
         String hashedString = "";
         if (mda != null) {
-            hashedString = HexBin.encode(mda.digest(toHash.getBytes(Charset.forName("UTF-8"))));
+            hashedString = Hex.encodeHexString(mda.digest(toHash.getBytes(Charset.forName("UTF-8"))));
         }
         return hashedString;
     }
