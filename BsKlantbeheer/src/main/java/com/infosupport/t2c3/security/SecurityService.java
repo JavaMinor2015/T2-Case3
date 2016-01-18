@@ -133,7 +133,7 @@ public class SecurityService {
         Credentials oldCredentials = customer.getCredentials();
 
         Customer cust = customerRepo.findByCredentialsUserName(oldCredentials.getUserName());
-        if(cust != null){
+        if (cust != null) {
             throw new NonUniqueValueException("Already a customer with this username");
         }
 
@@ -144,7 +144,13 @@ public class SecurityService {
         customerRepo.save(customer);
     }
 
-    public boolean checkTokenForCustomer(Long customerId, String tokenValue){
+    /**
+     * Checks if the given tokenvalue belongs to the customer
+     * @param customerId id of the customer
+     * @param tokenValue the tokenvalue
+     * @return the check
+     */
+    public boolean checkTokenForCustomer(Long customerId, String tokenValue) {
         Customer customer = customerRepo.findByCredentialsToken(tokenValue);
 
         return customer != null && customer.getId().equals(customerId);

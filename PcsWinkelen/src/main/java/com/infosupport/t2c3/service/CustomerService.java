@@ -45,10 +45,17 @@ public class CustomerService extends AbsRestService<Customer> {
         return customerRepo;
     }
 
+    /**
+     * Get all the orders from a customer checking the token.
+     * @param tokenValue the tokenvalue
+     * @param id the customerId
+     * @return the orders
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/{id}/orders")
-    public ResponseEntity<List<Order>> getAllOrdersForCustomer(@RequestHeader(value = "tokenValue") String tokenValue, @PathVariable Long id) {
+    public ResponseEntity<List<Order>> getAllOrdersForCustomer(
+            @RequestHeader(value = "tokenValue") String tokenValue,
+                                                               @PathVariable Long id) {
         Customer customer = customerRepo.findOne(id);
-        System.out.println(tokenValue);
         if (securityService.checkTokenForCustomer(id, tokenValue)) {
             return new ResponseEntity(customer.getOrders(), HttpStatus.OK);
         }

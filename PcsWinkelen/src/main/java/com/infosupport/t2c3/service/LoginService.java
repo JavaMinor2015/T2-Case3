@@ -6,7 +6,6 @@ import com.infosupport.t2c3.model.Token;
 import com.infosupport.t2c3.repositories.CredentialsRepository;
 import com.infosupport.t2c3.repositories.CustomerRepository;
 import com.infosupport.t2c3.security.SecurityService;
-import java.util.List;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
