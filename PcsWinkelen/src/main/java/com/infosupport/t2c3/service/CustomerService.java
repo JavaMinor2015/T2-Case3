@@ -65,12 +65,12 @@ public class CustomerService extends AbsRestService<Customer> {
     @RequestMapping(method = RequestMethod.GET, value = "/{id}/orders")
     public ResponseEntity<List<Order>> getAllOrdersForCustomer(
             @RequestHeader(value = "tokenValue") String tokenValue,
-            @PathVariable Long id) {
+            @PathVariable("id") Long id) {
         Customer customer = customerRepo.findOne(id);
         if (securityService.checkTokenForCustomer(id, tokenValue)) {
-            return new ResponseEntity(customer.getOrders(), HttpStatus.OK);
+            return new ResponseEntity<>(customer.getOrders(), HttpStatus.OK);
         }
-        return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
 }

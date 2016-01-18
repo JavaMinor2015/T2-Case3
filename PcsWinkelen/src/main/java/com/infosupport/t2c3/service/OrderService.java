@@ -3,6 +3,7 @@ package com.infosupport.t2c3.service;
 import com.infosupport.t2c3.domain.accounts.Customer;
 import com.infosupport.t2c3.domain.orders.*;
 import com.infosupport.t2c3.domain.products.Product;
+import com.infosupport.t2c3.esb.DataVaultService;
 import com.infosupport.t2c3.exceptions.CaseException;
 import com.infosupport.t2c3.exceptions.ItemNotFoundException;
 import com.infosupport.t2c3.exceptions.NoCreditException;
@@ -35,6 +36,7 @@ import org.springframework.web.bind.annotation.*;
 public class OrderService {
 
     public static final BigDecimal DEFAULT_CREDIT_LIMIT = new BigDecimal(100);
+    public static final String CUSTOMER_PLACE_ORDER = "CUSTOMER_PLACE_ORDER";
 
     //TODO remove with init function
     private static final int MAX_FIFTEEN = 15;
@@ -51,6 +53,8 @@ public class OrderService {
     private SupplyHandler supplyHandler;
     @Autowired
     private CustomerRepository customerRepo;
+    @Autowired
+    private DataVaultService dataVaultService;
 
 
     /**
@@ -104,6 +108,8 @@ public class OrderService {
             customer.addOrder(orderRequest.getOrder());
             customerRepo.save(customer);
         }
+
+        dataVaultService.store(CUSTOMER_PLACE_ORDER, newOrder);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

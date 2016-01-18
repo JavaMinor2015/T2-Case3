@@ -1,11 +1,14 @@
 package com.infosupport.t2c3.domain.accounts;
 
-import com.infosupport.t2c3.domain.abs.AbsEntity;
+import com.infosupport.t2c3.domain.abs.AbsVaultEntity;
 import com.infosupport.t2c3.domain.orders.Address;
 import com.infosupport.t2c3.domain.orders.Order;
 import java.math.BigDecimal;
 import java.util.List;
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +18,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class Customer extends AbsEntity {
+public class Customer extends AbsVaultEntity {
 
     private static final long serialVersionUID = -6108420221541643144L;
 
@@ -39,6 +42,11 @@ public class Customer extends AbsEntity {
      */
     public void addOrder(Order order) {
         orders.add(order);
+    }
+
+    @Override
+    public String generateBusinessKey() {
+        return "CU-" + getId() + "-" + asThreeDigits(lastName);
     }
 
 }
