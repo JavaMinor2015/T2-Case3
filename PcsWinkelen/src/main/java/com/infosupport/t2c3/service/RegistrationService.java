@@ -39,10 +39,10 @@ public class RegistrationService {
             securityService.register(customer);
         } catch (NonUniqueValueException e) {
             logger.info(e);
-            return new ResponseEntity<String>(HttpStatus.CONFLICT);
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
 
         }
-        return new ResponseEntity<String>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

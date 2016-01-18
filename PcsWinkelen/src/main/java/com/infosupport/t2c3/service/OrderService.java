@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 /**
  * Created by Windows 7 on 6-1-2016.
  */
-
 @RestController
 @RequestMapping(value = "/order", produces = "application/json")
 @CrossOrigin
