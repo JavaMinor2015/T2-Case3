@@ -145,7 +145,7 @@ public class SecurityService {
     }
 
     /**
-     * Checks if the given tokenvalue belongs to the customer
+     * Checks if the given tokenvalue belongs to the customer.
      * @param customerId id of the customer
      * @param tokenValue the tokenvalue
      * @return the check
