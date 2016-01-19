@@ -101,7 +101,7 @@ public class OrderServiceTest extends TestCase {
     public void testPlaceOrderWithoutToken(){
         assertTrue(customer.getOrders().size() == 0);
         orderService.placeOrder(new OrderRequest(null, order));
-        assertEquals(OrderStatus.WAIT_FOR_APPROVE, order.getStatus());
+        assertEquals(OrderStatus.WAIT_FOR_APPROVAL, order.getStatus());
         assertTrue(customer.getOrders().size() == 0 );
     }
 
