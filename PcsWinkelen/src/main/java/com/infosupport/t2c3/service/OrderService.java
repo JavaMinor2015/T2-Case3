@@ -229,6 +229,7 @@ public class OrderService {
             Order order = new Order(
                     null,
                     OrderStatus.PLACED,
+                    false,
                     items,
                     new CustomerData(
                             "Remco",
