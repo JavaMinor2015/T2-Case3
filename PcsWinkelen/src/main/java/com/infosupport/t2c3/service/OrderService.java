@@ -157,7 +157,7 @@ public class OrderService {
 
         Order order = orderRepo.findOne(id);
 
-        if (order.getStatus().equals(OrderStatus.SENT)) {
+        if (!canBeChanged(order.getStatus())) {
             throw new OrderAlreadyShippedException();
         }
 
@@ -185,7 +185,7 @@ public class OrderService {
 
         Order order = orderRepo.findOne(id);
 
-        if (order.getStatus().equals(OrderStatus.SENT)) {
+        if (!canBeChanged(order.getStatus())) {
             throw new OrderAlreadyShippedException();
         }
 
@@ -209,6 +209,18 @@ public class OrderService {
     private void checkCreditLimit(Order order, BigDecimal maxCreditLimit) {
         if (order.getTotalPrice().compareTo(maxCreditLimit) == 1) {
             order.setStatus(OrderStatus.WAIT_FOR_APPROVAL);
+        }
+    }
+
+    private boolean canBeChanged(OrderStatus orderStatus) {
+        switch (orderStatus) {
+            case REJECTED:
+            case CANCELED:
+            case SENT:
+                return false;
+
+            default:
+                return true;
         }
     }
 
