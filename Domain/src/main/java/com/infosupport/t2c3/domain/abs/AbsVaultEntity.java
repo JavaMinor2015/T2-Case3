@@ -1,5 +1,6 @@
 package com.infosupport.t2c3.domain.abs;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import lombok.Getter;
@@ -13,6 +14,7 @@ public abstract class AbsVaultEntity extends AbsEntity implements DataVaultEnabl
     /* Most useless constant ever */
     private static final int THREE_DIGITS = 3;
 
+    @JsonIgnore
     @Getter
     private String businessKey;
 

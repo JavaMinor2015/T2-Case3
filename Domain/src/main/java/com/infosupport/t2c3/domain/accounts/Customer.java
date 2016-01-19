@@ -1,5 +1,6 @@
 package com.infosupport.t2c3.domain.accounts;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.infosupport.t2c3.domain.abs.AbsVaultEntity;
 import com.infosupport.t2c3.domain.orders.Address;
 import com.infosupport.t2c3.domain.orders.Order;
@@ -51,15 +52,17 @@ public class Customer extends AbsVaultEntity {
     /**
      * Edit the editable fields.
      * @param newCustomer customer object with the new values
-    @Override
-    public String generateBusinessKey() {
-        return "CU-" + getId() + "-" + asThreeDigits(lastName);
      */
     public void edit(Customer newCustomer) {
         this.firstName = newCustomer.getFirstName();
         this.lastName = newCustomer.getLastName();
         this.emailAddress = newCustomer.getEmailAddress();
         this.address = newCustomer.getAddress();
+    }
+
+    @Override
+    public String generateBusinessKey() {
+        return "CU-" + getId();
     }
 
 }
