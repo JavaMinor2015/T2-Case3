@@ -2,8 +2,8 @@ package com.infosupport.t2c3.service;
 
 import com.infosupport.t2c3.domain.accounts.Credentials;
 import com.infosupport.t2c3.domain.accounts.Customer;
+import com.infosupport.t2c3.exceptions.BadLoginException;
 import com.infosupport.t2c3.model.Token;
-import com.infosupport.t2c3.repositories.CredentialsRepository;
 import com.infosupport.t2c3.repositories.CustomerRepository;
 import com.infosupport.t2c3.security.SecurityService;
 import lombok.Setter;
@@ -21,10 +21,6 @@ import org.springframework.web.bind.annotation.*;
 @Setter
 public class LoginService {
 
-    //TODO remove
-    @Autowired
-    private CredentialsRepository repo;
-    //TODO remove
     @Autowired
     private CustomerRepository customerRepo;
 
@@ -43,12 +39,11 @@ public class LoginService {
         String tokenValue = securityService.verify(credentials.getUserName(), credentials.getPassword());
         if (!tokenValue.isEmpty()) {
             Customer customer = customerRepo.findByCredentialsUserName(credentials.getUserName());
-            //TODO instead exclude credentials in output
             customer.setCredentials(null);
             token = new Token(tokenValue, customer);
             return new ResponseEntity<>(token, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            throw new BadLoginException();
         }
 
     }

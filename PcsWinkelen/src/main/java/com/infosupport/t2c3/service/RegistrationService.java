@@ -1,7 +1,6 @@
 package com.infosupport.t2c3.service;
 
 import com.infosupport.t2c3.domain.accounts.Customer;
-import com.infosupport.t2c3.exceptions.NonUniqueValueException;
 import com.infosupport.t2c3.security.SecurityService;
 import lombok.Setter;
 import org.apache.log4j.LogManager;
@@ -33,15 +32,7 @@ public class RegistrationService {
      */
     @RequestMapping(value = "/register", method = RequestMethod.POST, consumes = "application/json")
     public ResponseEntity<String> register(@RequestBody Customer customer) {
-
-        System.out.println(customer.getEmailAddress());
-        try {
-            securityService.register(customer);
-        } catch (NonUniqueValueException e) {
-            logger.info(e);
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-
-        }
+        securityService.register(customer);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

@@ -4,9 +4,11 @@ import com.infosupport.t2c3.data.BasicRepository;
 import com.infosupport.t2c3.domain.accounts.Credentials;
 import com.infosupport.t2c3.domain.accounts.Customer;
 import com.infosupport.t2c3.domain.orders.Order;
+import com.infosupport.t2c3.exceptions.MethodNotAllowedException;
 import com.infosupport.t2c3.repositories.CredentialsRepository;
 import com.infosupport.t2c3.repositories.CustomerRepository;
 import com.infosupport.t2c3.security.SecurityService;
+import com.infosupport.t2c3.service.abs.AbsSecuredRestService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping(value = "/customers", produces = "application/json")
-public class CustomerService extends AbsRestService<Customer> {
+public class CustomerService extends AbsSecuredRestService<Customer> {
 
     @Autowired
     private CustomerRepository customerRepo;
@@ -29,25 +31,14 @@ public class CustomerService extends AbsRestService<Customer> {
     @Autowired
     private SecurityService securityService;
 
-    //TODO remove
     @Override
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Customer getById(@PathVariable("id") final long id) {
-        return super.getById(id);
+        throw new MethodNotAllowedException();
     }
 
-    //TODO remove
     @Override
-    @RequestMapping(method = RequestMethod.GET)
     public List<Customer> getAll() {
-        return super.getAll();
-    }
-
-
-    //TODO remove
-    @RequestMapping(value = "/credentials", method = RequestMethod.GET)
-    public List<Credentials> getAllCredentials() {
-        return credentialsRepo.findAll();
+        throw new MethodNotAllowedException();
     }
 
     @Override
@@ -69,15 +60,10 @@ public class CustomerService extends AbsRestService<Customer> {
             @PathVariable Long id,
             @RequestBody Customer newCustomer) {
 
-        if (!securityService.checkTokenForCustomer(id, tokenValue)) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-
-        Customer customer = customerRepo.findOne(id);
-
+        Customer customer = getCustomer(id, tokenValue);
         customer.edit(newCustomer);
-
         customerRepo.save(customer);
+
         return new ResponseEntity<>(customer, HttpStatus.OK);
     }
 
@@ -95,16 +81,14 @@ public class CustomerService extends AbsRestService<Customer> {
             @PathVariable Long id,
             @RequestBody Credentials newCredentials) {
 
-        if (!securityService.checkTokenForCustomer(id, tokenValue)) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
+        getCustomer(id, tokenValue);
 
         Credentials credentials = credentialsRepo.findByToken(tokenValue);
-
         Credentials credentialsWithHashedPW =
                 securityService.createCredentials(newCredentials.getUserName(), newCredentials.getPassword());
         credentials.setPassword(credentialsWithHashedPW.getPassword());
         credentialsRepo.save(credentials);
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -120,11 +104,8 @@ public class CustomerService extends AbsRestService<Customer> {
     public ResponseEntity<List<Order>> getAllOrdersForCustomer(
             @RequestHeader(value = "tokenValue") String tokenValue,
             @PathVariable Long id) {
-        Customer customer = customerRepo.findOne(id);
-        if (securityService.checkTokenForCustomer(id, tokenValue)) {
-            return new ResponseEntity(customer.getOrders(), HttpStatus.OK);
-        }
-        return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        Customer customer = getCustomer(id, tokenValue);
+        return new ResponseEntity<>(customer.getOrders(), HttpStatus.OK);
     }
 
 }

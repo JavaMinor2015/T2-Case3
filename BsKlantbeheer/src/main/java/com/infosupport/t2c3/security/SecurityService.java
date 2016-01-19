@@ -134,7 +134,6 @@ public class SecurityService {
      * Register a customer.
      *
      * @param customer customer with data to write to db.
-     * @return token, so user is immediately logged in
      */
     public void register(Customer customer) throws NonUniqueValueException {
         Credentials oldCredentials = customer.getCredentials();
@@ -152,14 +151,12 @@ public class SecurityService {
     }
 
     /**
-     * Checks if the given tokenvalue belongs to the customer.
-     * @param customerId id of the customer
-     * @param tokenValue the tokenvalue
-     * @return the check
+     * Find a customer by their token.
+     *
+     * @param tokenValue the token
+     * @return the customer or null
      */
-    public boolean checkTokenForCustomer(Long customerId, String tokenValue) {
-        Customer customer = customerRepo.findByCredentialsToken(tokenValue);
-
-        return customer != null && customer.getId().equals(customerId);
+    public Customer getCustomerByToken(String tokenValue) {
+        return customerRepo.findByCredentialsToken(tokenValue);
     }
 }
