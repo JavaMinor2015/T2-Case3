@@ -1,5 +1,6 @@
 package com.infosupport.t2c3.domain.accounts;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.infosupport.t2c3.domain.abs.AbsEntity;
 import com.infosupport.t2c3.domain.orders.Address;
 import com.infosupport.t2c3.domain.orders.Order;
@@ -30,8 +31,12 @@ public class Customer extends AbsEntity {
 
     @OneToOne(cascade = CascadeType.PERSIST)
     private Address address;
+
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.PERSIST)
     private Credentials credentials;
+
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.MERGE)
     private List<Order> orders;
 

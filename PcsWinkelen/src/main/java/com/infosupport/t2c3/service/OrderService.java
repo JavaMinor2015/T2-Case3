@@ -51,17 +51,6 @@ public class OrderService {
     @Autowired
     private CustomerRepository customerRepo;
 
-
-    /**
-     * Get all the orders from the repo.
-     *
-     * @return All the orders
-     */
-    @RequestMapping(method = RequestMethod.GET)
-    public List<Order> getAllOrders() {
-        return orderRepo.findAll();
-    }
-
     /**
      * Send order to the backend. Repo passes it to the dababase.
      *

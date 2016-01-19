@@ -7,13 +7,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * Created by Leon Stam on 19-1-2016.
  */
 @ResponseStatus(HttpStatus.UNAUTHORIZED)
-public class BadLoginException extends CaseException {
+public class UnauthorizedException extends CaseException {
 
     /**
-     * Create a BadLoginException.
+     * Create an UnauthorizedException.
      */
-    public BadLoginException() {
-        super("The given username + password combination is unknown/incorrect.");
+    public UnauthorizedException() {
+        super("You're not authorized to access this.");
     }
 
 }
