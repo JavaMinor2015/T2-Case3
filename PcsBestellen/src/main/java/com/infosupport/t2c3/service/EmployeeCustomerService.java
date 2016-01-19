@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping(value = "/employee/customers", produces = "application/json")
-public class CustomerService extends AbsRestService<Customer> {
+public class EmployeeCustomerService extends AbsRestService<Customer> {
 
     @Autowired
     private CustomerRepository customerRepository;

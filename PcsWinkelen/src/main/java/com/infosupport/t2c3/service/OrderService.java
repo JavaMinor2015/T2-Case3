@@ -1,17 +1,20 @@
 package com.infosupport.t2c3.service;
 
+import com.infosupport.t2c3.data.BasicRepository;
 import com.infosupport.t2c3.domain.accounts.Customer;
 import com.infosupport.t2c3.domain.orders.*;
 import com.infosupport.t2c3.domain.products.Product;
 import com.infosupport.t2c3.esb.DataVaultService;
 import com.infosupport.t2c3.exceptions.CaseException;
 import com.infosupport.t2c3.exceptions.ItemNotFoundException;
-import com.infosupport.t2c3.exceptions.NoCreditException;
+import com.infosupport.t2c3.exceptions.MethodNotAllowedException;
+import com.infosupport.t2c3.exceptions.OrderAlreadyShippedException;
 import com.infosupport.t2c3.model.OrderRequest;
 import com.infosupport.t2c3.repositories.CustomerRepository;
 import com.infosupport.t2c3.repositories.OrderRepository;
 import com.infosupport.t2c3.repositories.ProductRepository;
 import com.infosupport.t2c3.repositories.SupplyHandler;
+import com.infosupport.t2c3.service.abs.AbsSecuredRestService;
 import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -31,11 +34,10 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping(value = "/order", produces = "application/json")
-@CrossOrigin
 @Setter
-public class OrderService {
+public class OrderService extends AbsSecuredRestService<Order> {
 
-    public static final BigDecimal DEFAULT_CREDIT_LIMIT = new BigDecimal(100);
+    public static final BigDecimal DEFAULT_CREDIT_LIMIT = BigDecimal.valueOf(100);
     public static final String CUSTOMER_PLACE_ORDER = "CUSTOMER_PLACE_ORDER";
 
     //TODO remove with init function
@@ -56,15 +58,19 @@ public class OrderService {
     @Autowired
     private DataVaultService dataVaultService;
 
+    @Override
+    public BasicRepository<Order> provideRepo() {
+        return orderRepo;
+    }
 
-    /**
-     * Get all the orders from the repo.
-     *
-     * @return All the orders
-     */
-    @RequestMapping(method = RequestMethod.GET)
-    public List<Order> getAllOrders() {
-        return orderRepo.findAll();
+    @Override
+    public Order getById(@PathVariable("orderId") long id) {
+        throw new MethodNotAllowedException();
+    }
+
+    @Override
+    public List<Order> getAll() {
+        throw new MethodNotAllowedException();
     }
 
     /**
@@ -81,18 +87,17 @@ public class OrderService {
         Order newOrder = calculatePrices(orderRequest.getOrder());
         newOrder.setStatus(OrderStatus.PLACED);
 
-        //Check for Customer
+        //Check for customer & credit limit
         Optional<Customer> customerOptional;
         if (orderRequest.getToken() != null && orderRequest.getToken().getValue() != null) {
             Customer customer = customerRepo.findByCredentialsToken(orderRequest.getToken().getValue());
-            testCreditLimit(newOrder, customer.getCreditLimit());
+            checkCreditLimit(newOrder, customer.getCreditLimit());
             customerOptional = Optional.of(customer);
         } else {
             //Default Credit Limit applies
-            testCreditLimit(newOrder, DEFAULT_CREDIT_LIMIT);
+            checkCreditLimit(newOrder, DEFAULT_CREDIT_LIMIT);
             customerOptional = Optional.empty();
         }
-
 
         //Decrease Supply
         for (OrderItem orderItem : newOrder.getItems()) {
@@ -121,7 +126,7 @@ public class OrderService {
      * @return the order with prices set
      */
     private Order calculatePrices(Order order) throws ItemNotFoundException {
-        order.setTotalPrice(new BigDecimal(0.0));
+        order.setTotalPrice(BigDecimal.valueOf(0.0));
 
         for (OrderItem item : order.getItems()) {
             Product product = productRepo.findOne(item.getProduct().getId());
@@ -132,7 +137,7 @@ public class OrderService {
             //Update product & prices
             item.setProduct(product);
             item.setPrice(product.getPrice());
-            BigDecimal pricePerItem = item.getPrice().multiply(new BigDecimal(item.getAmount()));
+            BigDecimal pricePerItem = item.getPrice().multiply(BigDecimal.valueOf(item.getAmount()));
             BigDecimal totalPrice = order.getTotalPrice().add(pricePerItem);
             order.setTotalPrice(totalPrice);
         }
@@ -140,15 +145,81 @@ public class OrderService {
     }
 
     /**
-     * Test is if this order surpasses the credit limit.
+     * Edit the address of an order.
      *
-     * @param order The order
-     * @param maxCreditLimit The maximum limit
-     * @throws NoCreditException if the credit limit is exceeded
+     * @param newOrder   order object with the new values.
+     * @param tokenValue user must be logged in as owner of the order
+     * @param orderId    orderId of the order
+     * @return order object with new values
      */
-    private void testCreditLimit(Order order, BigDecimal maxCreditLimit) throws NoCreditException {
+    @RequestMapping(value = "/{orderId}", method = RequestMethod.PUT, consumes = "application/json")
+    public ResponseEntity<Order> editOrderAddress(
+            @RequestBody Order newOrder,
+            @RequestHeader String tokenValue,
+            @PathVariable Long orderId) {
+
+        Customer customer = customerRepo.findByOrdersId(orderId);
+        getCustomer(customer.getId(), tokenValue);
+
+        Order order = super.getById(orderId);
+        if (!canBeChanged(order.getStatus())) {
+            throw new OrderAlreadyShippedException();
+        }
+
+        order.getCustomerData().getAddress().edit(newOrder.getCustomerData().getAddress());
+        orderRepo.save(order);
+
+        return new ResponseEntity<>(order, HttpStatus.OK);
+    }
+
+    /**
+     * Customer can cancel an order.
+     *
+     * @param orderId    orderId to be cancelled
+     * @param tokenValue user must be logged in as the owner of the order
+     * @return 200 OK
+     */
+    @RequestMapping(value = "/{orderId}", method = RequestMethod.DELETE)
+    public ResponseEntity<Void> cancelOrder(@PathVariable Long orderId, @RequestHeader String tokenValue) {
+        Customer customer = customerRepo.findByOrdersId(orderId);
+        getCustomer(customer.getId(), tokenValue);
+
+        Order order = super.getById(orderId);
+        if (!canBeChanged(order.getStatus())) {
+            throw new OrderAlreadyShippedException();
+        }
+
+        //Decrease Supply
+        for (OrderItem orderItem : order.getItems()) {
+            supplyHandler.increaseStock(orderItem.getProduct(), orderItem.getAmount());
+        }
+        order.setStatus(OrderStatus.CANCELED);
+        orderRepo.save(order);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    /**
+     * Check if this order surpasses the credit limit.
+     *
+     * @param order          The order
+     * @param maxCreditLimit The maximum limit
+     */
+    private void checkCreditLimit(Order order, BigDecimal maxCreditLimit) {
         if (order.getTotalPrice().compareTo(maxCreditLimit) == 1) {
-            throw new NoCreditException(maxCreditLimit);
+            order.setStatus(OrderStatus.WAIT_FOR_APPROVAL);
+        }
+    }
+
+    private boolean canBeChanged(OrderStatus orderStatus) {
+        switch (orderStatus) {
+            case REJECTED:
+            case CANCELED:
+            case SENT:
+                return false;
+
+            default:
+                return true;
         }
     }
 
@@ -164,15 +235,16 @@ public class OrderService {
             for (int a = 0; a < MAX_THREE; a++) {
                 items.add(
                         OrderItem.builder()
-                        .amount(random.nextInt(MAX_FOUR) + 1)
-                        .product(productRepo.findOne((long) random.nextInt(MAX_FIFTEEN) + 1))
-                        .build()
+                                .amount(random.nextInt(MAX_FOUR) + 1)
+                                .product(productRepo.findOne((long) random.nextInt(MAX_FIFTEEN) + 1))
+                                .build()
                 );
             }
 
             Order order = new Order(
                     null,
                     OrderStatus.PLACED,
+                    false,
                     items,
                     new CustomerData(
                             "Remco",

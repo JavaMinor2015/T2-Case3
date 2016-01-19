@@ -2,6 +2,7 @@ package com.infosupport.t2c3.service;
 
 import com.infosupport.t2c3.data.BasicRepository;
 import com.infosupport.t2c3.domain.abs.AbsEntity;
+import com.infosupport.t2c3.exceptions.ItemNotFoundException;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -29,7 +30,11 @@ public abstract class AbsRestService<X extends AbsEntity> {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public X getById(@PathVariable("id") final long id)  {
-        return repo.findOne(id);
+        X foundX = repo.findOne(id);
+        if (foundX == null) {
+            throw new ItemNotFoundException("Item not found");
+        }
+        return foundX;
     }
 
     /**

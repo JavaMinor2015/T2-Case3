@@ -28,6 +28,8 @@ public class Order extends AbsVaultEntity {
     @Enumerated(EnumType.STRING)
     @Setter
     private OrderStatus status;
+    @Setter
+    private boolean paid;
     @OneToMany(cascade = CascadeType.PERSIST)
     private List<OrderItem> items;
     @OneToOne(cascade = CascadeType.PERSIST)

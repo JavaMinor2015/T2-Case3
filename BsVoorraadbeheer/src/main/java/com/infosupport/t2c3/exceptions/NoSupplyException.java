@@ -20,7 +20,6 @@ public class NoSupplyException extends CaseException {
     public NoSupplyException(AbsEntity ofEntity, int itemsLeft) {
         super(
                 "There are only " + itemsLeft + " items left of " + ofEntity.getClass().getSimpleName()
-                        + " (ID: " + ofEntity.getId() + ")"
         );
         this.itemsLeft = itemsLeft;
     }

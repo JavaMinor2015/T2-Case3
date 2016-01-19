@@ -23,4 +23,11 @@ public interface CustomerRepository extends BasicRepository<Customer> {
      * @return the customer
      */
     Customer findByCredentialsToken(String token);
+
+    /**
+     * Find a customer by orderid.
+     * @param orderId the orderId
+     * @return the customer
+     */
+    Customer findByOrdersId(Long orderId);
 }

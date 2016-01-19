@@ -30,8 +30,12 @@ public class Customer extends AbsVaultEntity {
 
     @OneToOne(cascade = CascadeType.PERSIST)
     private Address address;
+
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.PERSIST)
     private Credentials credentials;
+
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.MERGE)
     private List<Order> orders;
 
@@ -44,9 +48,18 @@ public class Customer extends AbsVaultEntity {
         orders.add(order);
     }
 
+    /**
+     * Edit the editable fields.
+     * @param newCustomer customer object with the new values
     @Override
     public String generateBusinessKey() {
         return "CU-" + getId() + "-" + asThreeDigits(lastName);
+     */
+    public void edit(Customer newCustomer) {
+        this.firstName = newCustomer.getFirstName();
+        this.lastName = newCustomer.getLastName();
+        this.emailAddress = newCustomer.getEmailAddress();
+        this.address = newCustomer.getAddress();
     }
 
 }
