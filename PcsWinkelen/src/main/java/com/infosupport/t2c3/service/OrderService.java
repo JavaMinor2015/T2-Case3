@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.*;
 @Setter
 public class OrderService {
 
-    public static final BigDecimal DEFAULT_CREDIT_LIMIT = new BigDecimal(100);
+    public static final BigDecimal DEFAULT_CREDIT_LIMIT = BigDecimal.valueOf(100);
 
     //TODO remove with init function
     private static final int MAX_FIFTEEN = 15;
@@ -115,7 +115,7 @@ public class OrderService {
      * @return the order with prices set
      */
     private Order calculatePrices(Order order) throws ItemNotFoundException {
-        order.setTotalPrice(new BigDecimal(0.0));
+        order.setTotalPrice(BigDecimal.valueOf(0.0));
 
         for (OrderItem item : order.getItems()) {
             Product product = productRepo.findOne(item.getProduct().getId());
@@ -126,7 +126,7 @@ public class OrderService {
             //Update product & prices
             item.setProduct(product);
             item.setPrice(product.getPrice());
-            BigDecimal pricePerItem = item.getPrice().multiply(new BigDecimal(item.getAmount()));
+            BigDecimal pricePerItem = item.getPrice().multiply(BigDecimal.valueOf(item.getAmount()));
             BigDecimal totalPrice = order.getTotalPrice().add(pricePerItem);
             order.setTotalPrice(totalPrice);
         }

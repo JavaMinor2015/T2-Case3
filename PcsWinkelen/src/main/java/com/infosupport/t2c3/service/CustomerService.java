@@ -20,6 +20,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/customers", produces = "application/json")
 public class CustomerService extends AbsRestService<Customer> {
 
+    @Autowired
+    private CustomerRepository customerRepo;
+
+    @Autowired
+    private CredentialsRepository credentialsRepo;
+
+    @Autowired
+    private SecurityService securityService;
+
     //TODO remove
     @Override
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -35,15 +44,6 @@ public class CustomerService extends AbsRestService<Customer> {
     }
 
 
-    @Autowired
-    private CustomerRepository customerRepo;
-
-    @Autowired
-    private CredentialsRepository credentialsRepo;
-
-    @Autowired
-    private SecurityService securityService;
-
     //TODO remove
     @RequestMapping(value = "/credentials", method = RequestMethod.GET)
     public List<Credentials> getAllCredentials() {
@@ -54,6 +54,60 @@ public class CustomerService extends AbsRestService<Customer> {
     public BasicRepository<Customer> provideRepo() {
         return customerRepo;
     }
+
+    /**
+     * Edit a customer.
+     *
+     * @param tokenValue  user must be logged in
+     * @param id          id of the customer
+     * @param newCustomer customer object with the new values
+     * @return edited customer with new values
+     */
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = "application/json")
+    public ResponseEntity<Customer> editCustomer(
+            @RequestHeader String tokenValue,
+            @PathVariable Long id,
+            @RequestBody Customer newCustomer) {
+
+        if (!securityService.checkTokenForCustomer(id, tokenValue)) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        Customer customer = customerRepo.findOne(id);
+
+        customer.edit(newCustomer);
+
+        customerRepo.save(customer);
+        return new ResponseEntity<>(customer, HttpStatus.OK);
+    }
+
+    /**
+     * Edit the password of a customer.
+     *
+     * @param tokenValue     user must be logged in as the customer
+     * @param id             id of the customer
+     * @param newCredentials credentials object with the new values
+     * @return HttpResponse
+     */
+    @RequestMapping(value = "/{id}/credentials", method = RequestMethod.PUT, consumes = "application/json")
+    public ResponseEntity<String> editCredentials(
+            @RequestHeader String tokenValue,
+            @PathVariable Long id,
+            @RequestBody Credentials newCredentials) {
+
+        if (!securityService.checkTokenForCustomer(id, tokenValue)) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        Credentials credentials = credentialsRepo.findByToken(tokenValue);
+
+        Credentials credentialsWithHashedPW =
+                securityService.createCredentials(newCredentials.getUserName(), newCredentials.getPassword());
+        credentials.setPassword(credentialsWithHashedPW.getPassword());
+        credentialsRepo.save(credentials);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 
     /**
      * Get all the orders from a customer checking the token.

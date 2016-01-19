@@ -5,7 +5,10 @@ import com.infosupport.t2c3.domain.orders.Address;
 import com.infosupport.t2c3.domain.orders.Order;
 import java.math.BigDecimal;
 import java.util.List;
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -39,6 +42,17 @@ public class Customer extends AbsEntity {
      */
     public void addOrder(Order order) {
         orders.add(order);
+    }
+
+    /**
+     * Edit the editable fields.
+     * @param newCustomer customer object with the new values
+     */
+    public void edit(Customer newCustomer) {
+        this.firstName = newCustomer.getFirstName();
+        this.lastName = newCustomer.getLastName();
+        this.emailAddress = newCustomer.getEmailAddress();
+        this.address = newCustomer.getAddress();
     }
 
 }
