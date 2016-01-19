@@ -2,6 +2,7 @@ package com.infosupport.t2c3.service;
 
 import com.infosupport.t2c3.domain.accounts.Credentials;
 import com.infosupport.t2c3.domain.accounts.Customer;
+import com.infosupport.t2c3.exceptions.BadLoginException;
 import com.infosupport.t2c3.model.Token;
 import com.infosupport.t2c3.repositories.CredentialsRepository;
 import com.infosupport.t2c3.repositories.CustomerRepository;
@@ -48,7 +49,7 @@ public class LoginService {
             token = new Token(tokenValue, customer);
             return new ResponseEntity<>(token, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            throw new BadLoginException();
         }
 
     }
