@@ -3,9 +3,9 @@ package com.infosupport.t2c3.service;
 import com.infosupport.t2c3.domain.accounts.Customer;
 import com.infosupport.t2c3.domain.orders.Order;
 import com.infosupport.t2c3.domain.orders.OrderItem;
+import com.infosupport.t2c3.domain.orders.OrderStatus;
 import com.infosupport.t2c3.domain.products.Product;
 import com.infosupport.t2c3.exceptions.CaseException;
-import com.infosupport.t2c3.exceptions.NoCreditException;
 import com.infosupport.t2c3.model.OrderRequest;
 import com.infosupport.t2c3.model.Token;
 import com.infosupport.t2c3.repositories.CustomerRepository;
@@ -99,16 +99,9 @@ public class OrderServiceTest extends TestCase {
     }
 
     public void testPlaceOrderWithoutToken(){
-
         assertTrue(customer.getOrders().size() == 0);
-        try {
-            orderService.placeOrder(new OrderRequest(null, order));
-            fail();
-        } catch (CaseException e) {
-            if (!(e instanceof NoCreditException)) {
-                fail();
-            }
-        }
+        orderService.placeOrder(new OrderRequest(null, order));
+        assertEquals(OrderStatus.WAIT_FOR_APPROVE, order.getStatus());
         assertTrue(customer.getOrders().size() == 0 );
     }
 

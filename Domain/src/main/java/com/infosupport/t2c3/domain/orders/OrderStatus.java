@@ -8,19 +8,9 @@ import lombok.Getter;
 @Getter
 public enum OrderStatus {
 
-    PLACED("placed"),
-    REJECTED("rejected"),
-    SENT("sent");
-
-    private final String status;
-
-    OrderStatus(String status) {
-        this.status = status;
-    }
-
-    @Override
-    public String toString() {
-        return status;
-    }
+    WAIT_FOR_APPROVE,
+    PLACED,
+    REJECTED,
+    SENT
 
 }

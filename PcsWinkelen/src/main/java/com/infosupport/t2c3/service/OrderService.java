@@ -5,7 +5,6 @@ import com.infosupport.t2c3.domain.orders.*;
 import com.infosupport.t2c3.domain.products.Product;
 import com.infosupport.t2c3.exceptions.CaseException;
 import com.infosupport.t2c3.exceptions.ItemNotFoundException;
-import com.infosupport.t2c3.exceptions.NoCreditException;
 import com.infosupport.t2c3.model.OrderRequest;
 import com.infosupport.t2c3.repositories.CustomerRepository;
 import com.infosupport.t2c3.repositories.OrderRepository;
@@ -77,18 +76,17 @@ public class OrderService {
         Order newOrder = calculatePrices(orderRequest.getOrder());
         newOrder.setStatus(OrderStatus.PLACED);
 
-        //Check for Customer
+        //Check for customer & credit limit
         Optional<Customer> customerOptional;
         if (orderRequest.getToken() != null && orderRequest.getToken().getValue() != null) {
             Customer customer = customerRepo.findByCredentialsToken(orderRequest.getToken().getValue());
-            testCreditLimit(newOrder, customer.getCreditLimit());
+            checkCreditLimit(newOrder, customer.getCreditLimit());
             customerOptional = Optional.of(customer);
         } else {
             //Default Credit Limit applies
-            testCreditLimit(newOrder, DEFAULT_CREDIT_LIMIT);
+            checkCreditLimit(newOrder, DEFAULT_CREDIT_LIMIT);
             customerOptional = Optional.empty();
         }
-
 
         //Decrease Supply
         for (OrderItem orderItem : newOrder.getItems()) {
@@ -134,15 +132,14 @@ public class OrderService {
     }
 
     /**
-     * Test is if this order surpasses the credit limit.
+     * Check if this order surpasses the credit limit.
      *
      * @param order The order
      * @param maxCreditLimit The maximum limit
-     * @throws NoCreditException if the credit limit is exceeded
      */
-    private void testCreditLimit(Order order, BigDecimal maxCreditLimit) throws NoCreditException {
+    private void checkCreditLimit(Order order, BigDecimal maxCreditLimit) {
         if (order.getTotalPrice().compareTo(maxCreditLimit) == 1) {
-            throw new NoCreditException(maxCreditLimit);
+            order.setStatus(OrderStatus.WAIT_FOR_APPROVE);
         }
     }
 
