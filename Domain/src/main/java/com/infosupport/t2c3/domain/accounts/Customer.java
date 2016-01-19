@@ -44,6 +44,10 @@ public class Customer extends AbsEntity {
         orders.add(order);
     }
 
+    /**
+     * Edit the editable fields.
+     * @param newCustomer customer object with the new values
+     */
     public void edit(Customer newCustomer) {
         this.firstName = newCustomer.getFirstName();
         this.lastName = newCustomer.getLastName();
