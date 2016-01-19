@@ -5,6 +5,7 @@ import com.infosupport.t2c3.domain.orders.*;
 import com.infosupport.t2c3.domain.products.Product;
 import com.infosupport.t2c3.exceptions.CaseException;
 import com.infosupport.t2c3.exceptions.ItemNotFoundException;
+import com.infosupport.t2c3.exceptions.OrderAlreadyShippedException;
 import com.infosupport.t2c3.model.OrderRequest;
 import com.infosupport.t2c3.repositories.CustomerRepository;
 import com.infosupport.t2c3.repositories.OrderRepository;
@@ -156,11 +157,43 @@ public class OrderService {
 
         Order order = orderRepo.findOne(id);
 
+        if (!canBeChanged(order.getStatus())) {
+            throw new OrderAlreadyShippedException();
+        }
+
         order.getCustomerData().getAddress().edit(newOrder.getCustomerData().getAddress());
 
         orderRepo.save(order);
 
         return new ResponseEntity<Order>(order, HttpStatus.OK);
+    }
+
+    /**
+     * Customer can cancel an order.
+     *
+     * @param id         orderId to be cancelled
+     * @param tokenValue user must be logged in as the owner of the order
+     * @return 200 OK
+     */
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<Void> cancelOrder(@PathVariable Long id, @RequestHeader String tokenValue) {
+
+        Customer customer = customerRepo.findByOrdersId(id);
+        if (!securityService.checkTokenForCustomer(customer.getId(), tokenValue)) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        Order order = orderRepo.findOne(id);
+
+        if (!canBeChanged(order.getStatus())) {
+            throw new OrderAlreadyShippedException();
+        }
+
+        order.setStatus(OrderStatus.CANCELED);
+
+        orderRepo.save(order);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
@@ -172,6 +205,18 @@ public class OrderService {
     private void checkCreditLimit(Order order, BigDecimal maxCreditLimit) {
         if (order.getTotalPrice().compareTo(maxCreditLimit) == 1) {
             order.setStatus(OrderStatus.WAIT_FOR_APPROVAL);
+        }
+    }
+
+    private boolean canBeChanged(OrderStatus orderStatus) {
+        switch (orderStatus) {
+            case REJECTED:
+            case CANCELED:
+            case SENT:
+                return false;
+
+            default:
+                return true;
         }
     }
 
