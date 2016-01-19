@@ -11,6 +11,13 @@ import retrofit2.http.Path;
  */
 public interface EsbEndpoint {
 
+    /**
+     * Store data in the DataStore using the ESB.
+     *
+     * @param method the method
+     * @param vaultModel DataVault data
+     * @return a RetroFit call
+     */
     @FormUrlEncoded
     @POST("storeData/{method}")
     Call<Void> storeData(@Path("method") String method, @Body DataVaultModel vaultModel);
