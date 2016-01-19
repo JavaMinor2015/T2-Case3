@@ -2,6 +2,7 @@ package com.infosupport.t2c3.domain.accounts;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.infosupport.t2c3.domain.abs.AbsVaultEntity;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.infosupport.t2c3.domain.orders.Address;
 import com.infosupport.t2c3.domain.orders.Order;
 import java.math.BigDecimal;
@@ -32,7 +33,7 @@ public class Customer extends AbsVaultEntity {
     @OneToOne(cascade = CascadeType.PERSIST)
     private Address address;
 
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @OneToOne(cascade = CascadeType.PERSIST)
     private Credentials credentials;
 
