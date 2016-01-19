@@ -189,6 +189,10 @@ public class OrderService {
             throw new OrderAlreadyShippedException();
         }
 
+        //Decrease Supply
+        for (OrderItem orderItem : order.getItems()) {
+            supplyHandler.increaseStock(orderItem.getProduct(), orderItem.getAmount());
+        }
         order.setStatus(OrderStatus.CANCELED);
 
         orderRepo.save(order);
