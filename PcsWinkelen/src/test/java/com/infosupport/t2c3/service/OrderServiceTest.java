@@ -60,7 +60,7 @@ public class OrderServiceTest extends TestCase {
         items.add(item2);
         items.add(item3);
 
-        order = new Order(null, null, items, null);
+        order = new Order(null, null, false, items, null);
 
         orderService = new OrderService();
         mockedOrderRepo = mock(OrderRepository.class);
