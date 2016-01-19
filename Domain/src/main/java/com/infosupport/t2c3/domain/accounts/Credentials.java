@@ -24,6 +24,7 @@ import lombok.Setter;
 public class Credentials extends AbsEntity {
 
     private String userName;
+    @Setter
     private String password;
     @Setter
     private String token;

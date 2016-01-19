@@ -55,6 +55,37 @@ public class CustomerService extends AbsRestService<Customer> {
         return customerRepo;
     }
 
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = "application/json")
+    public ResponseEntity<Customer> editCustomer(@RequestHeader String tokenValue, @PathVariable Long id, @RequestBody Customer newCustomer) {
+
+        if (!securityService.checkTokenForCustomer(id, tokenValue)) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        Customer customer = customerRepo.findOne(id);
+
+        customer.edit(newCustomer);
+
+        customerRepo.save(customer);
+        return new ResponseEntity<>(customer, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/{id}/credentials", method = RequestMethod.PUT, consumes = "application/json")
+    public ResponseEntity<String> editCredentials(@RequestHeader String tokenValue, @PathVariable Long id, @RequestBody Credentials newCredentials) {
+
+        if (!securityService.checkTokenForCustomer(id, tokenValue)) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        Credentials credentials = credentialsRepo.findByToken(tokenValue);
+
+        newCredentials = securityService.createCredentials(newCredentials.getUserName(), newCredentials.getPassword());
+        credentials.setPassword(newCredentials.getPassword());
+        credentialsRepo.save(credentials);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
     /**
      * Get all the orders from a customer checking the token.
      *
