@@ -8,9 +8,12 @@ import lombok.Getter;
 @Getter
 public enum OrderStatus {
 
-    WAIT_FOR_APPROVE,
     PLACED,
+    IN_PROGRESS,
+    WAIT_FOR_APPROVAL,
+    ACCEPTED,
     REJECTED,
+    CANCELED,
     SENT
 
 }
