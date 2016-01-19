@@ -20,6 +20,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/customers", produces = "application/json")
 public class CustomerService extends AbsRestService<Customer> {
 
+    @Autowired
+    private CustomerRepository customerRepo;
+
+    @Autowired
+    private CredentialsRepository credentialsRepo;
+
+    @Autowired
+    private SecurityService securityService;
+
     //TODO remove
     @Override
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -34,15 +43,6 @@ public class CustomerService extends AbsRestService<Customer> {
         return super.getAll();
     }
 
-
-    @Autowired
-    private CustomerRepository customerRepo;
-
-    @Autowired
-    private CredentialsRepository credentialsRepo;
-
-    @Autowired
-    private SecurityService securityService;
 
     //TODO remove
     @RequestMapping(value = "/credentials", method = RequestMethod.GET)
