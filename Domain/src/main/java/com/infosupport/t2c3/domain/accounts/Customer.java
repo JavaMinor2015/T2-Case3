@@ -2,7 +2,7 @@ package com.infosupport.t2c3.domain.accounts;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.infosupport.t2c3.domain.abs.AbsEntity;
+import com.infosupport.t2c3.domain.abs.AbsVaultEntity;
 import com.infosupport.t2c3.domain.orders.Address;
 import com.infosupport.t2c3.domain.orders.Order;
 import java.math.BigDecimal;
@@ -20,7 +20,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class Customer extends AbsEntity {
+public class Customer extends AbsVaultEntity {
 
     private static final long serialVersionUID = -6108420221541643144L;
 
@@ -59,6 +59,11 @@ public class Customer extends AbsEntity {
         this.lastName = newCustomer.getLastName();
         this.emailAddress = newCustomer.getEmailAddress();
         this.address = newCustomer.getAddress();
+    }
+
+    @Override
+    public String generateBusinessKey() {
+        return "CU-" + getId();
     }
 
 }

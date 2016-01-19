@@ -4,6 +4,7 @@ import com.infosupport.t2c3.data.BasicRepository;
 import com.infosupport.t2c3.domain.accounts.Customer;
 import com.infosupport.t2c3.domain.orders.*;
 import com.infosupport.t2c3.domain.products.Product;
+import com.infosupport.t2c3.esb.DataVaultService;
 import com.infosupport.t2c3.exceptions.CaseException;
 import com.infosupport.t2c3.exceptions.ItemNotFoundException;
 import com.infosupport.t2c3.exceptions.MethodNotAllowedException;
@@ -37,6 +38,7 @@ import org.springframework.web.bind.annotation.*;
 public class OrderService extends AbsSecuredRestService<Order> {
 
     public static final BigDecimal DEFAULT_CREDIT_LIMIT = BigDecimal.valueOf(100);
+    public static final String CUSTOMER_PLACE_ORDER = "CUSTOMER_PLACE_ORDER";
 
     //TODO remove with init function
     private static final int MAX_FIFTEEN = 15;
@@ -53,6 +55,8 @@ public class OrderService extends AbsSecuredRestService<Order> {
     private SupplyHandler supplyHandler;
     @Autowired
     private CustomerRepository customerRepo;
+    @Autowired
+    private DataVaultService dataVaultService;
 
     @Override
     public BasicRepository<Order> provideRepo() {
@@ -109,6 +113,8 @@ public class OrderService extends AbsSecuredRestService<Order> {
             customer.addOrder(orderRequest.getOrder());
             customerRepo.save(customer);
         }
+
+        dataVaultService.store(CUSTOMER_PLACE_ORDER, newOrder);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
