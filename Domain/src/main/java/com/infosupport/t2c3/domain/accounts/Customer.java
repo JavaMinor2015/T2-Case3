@@ -1,16 +1,13 @@
 package com.infosupport.t2c3.domain.accounts;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.infosupport.t2c3.domain.abs.AbsVaultEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.infosupport.t2c3.domain.abs.AbsVaultEntity;
 import com.infosupport.t2c3.domain.orders.Address;
 import com.infosupport.t2c3.domain.orders.Order;
 import java.math.BigDecimal;
 import java.util.List;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,7 +35,7 @@ public class Customer extends AbsVaultEntity {
     private Credentials credentials;
 
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.MERGE)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     private List<Order> orders;
 
     /**

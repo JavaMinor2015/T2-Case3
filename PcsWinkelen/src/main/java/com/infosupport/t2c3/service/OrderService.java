@@ -2,7 +2,9 @@ package com.infosupport.t2c3.service;
 
 import com.infosupport.t2c3.data.BasicRepository;
 import com.infosupport.t2c3.domain.accounts.Customer;
-import com.infosupport.t2c3.domain.orders.*;
+import com.infosupport.t2c3.domain.orders.Order;
+import com.infosupport.t2c3.domain.orders.OrderItem;
+import com.infosupport.t2c3.domain.orders.OrderStatus;
 import com.infosupport.t2c3.domain.products.Product;
 import com.infosupport.t2c3.esb.DataVaultService;
 import com.infosupport.t2c3.exceptions.CaseException;
@@ -16,13 +18,9 @@ import com.infosupport.t2c3.repositories.ProductRepository;
 import com.infosupport.t2c3.repositories.SupplyHandler;
 import com.infosupport.t2c3.service.abs.AbsSecuredRestService;
 import java.math.BigDecimal;
-import java.security.SecureRandom;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.Setter;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,12 +37,6 @@ public class OrderService extends AbsSecuredRestService<Order> {
 
     public static final BigDecimal DEFAULT_CREDIT_LIMIT = BigDecimal.valueOf(100);
     public static final String CUSTOMER_PLACE_ORDER = "CUSTOMER_PLACE_ORDER";
-
-    //TODO remove with init function
-    private static final int MAX_FIFTEEN = 15;
-    private static final int MAX_FOUR = 4;
-    private static final int MAX_THREE = 3;
-    private static final Logger logger = LogManager.getLogger(OrderService.class.getSimpleName());
 
 
     @Autowired
@@ -125,7 +117,7 @@ public class OrderService extends AbsSecuredRestService<Order> {
      * @param order the order
      * @return the order with prices set
      */
-    private Order calculatePrices(Order order) throws ItemNotFoundException {
+    public Order calculatePrices(Order order) throws ItemNotFoundException {
         order.setTotalPrice(BigDecimal.valueOf(0.0));
 
         for (OrderItem item : order.getItems()) {
@@ -223,50 +215,5 @@ public class OrderService extends AbsSecuredRestService<Order> {
         }
     }
 
-    /**
-     * Initialize this product service.
-     */
-    public void init() {
-        //TODO: Remove this, is just adding random data
-        SecureRandom random = new SecureRandom();
-
-        for (int i = 0; i < 2; i++) {
-            List<OrderItem> items = new ArrayList<>();
-            for (int a = 0; a < MAX_THREE; a++) {
-                items.add(
-                        OrderItem.builder()
-                                .amount(random.nextInt(MAX_FOUR) + 1)
-                                .product(productRepo.findOne((long) random.nextInt(MAX_FIFTEEN) + 1))
-                                .build()
-                );
-            }
-
-            Order order = new Order(
-                    null,
-                    OrderStatus.PLACED,
-                    false,
-                    items,
-                    new CustomerData(
-                            "Remco",
-                            "Groenenboom",
-                            "remco@email.com",
-                            new Address(
-                                    "city",
-                                    "street",
-                                    "6",
-                                    "zipcode")
-                    )
-
-            );
-
-            try {
-                calculatePrices(order);
-            } catch (ItemNotFoundException e) {
-                logger.fatal("This should be impossible", e);
-            }
-
-            orderRepo.save(order);
-        }
-    }
 
 }
