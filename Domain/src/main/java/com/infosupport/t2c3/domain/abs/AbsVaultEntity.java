@@ -2,6 +2,7 @@ package com.infosupport.t2c3.domain.abs;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.PostPersist;
 import javax.persistence.PrePersist;
 import lombok.Getter;
 
@@ -22,7 +23,7 @@ public abstract class AbsVaultEntity extends AbsEntity implements DataVaultEnabl
      * Fill the business key field if it's not set yet.
      */
     @SuppressWarnings("squid:UnusedPrivateMethod")
-    @PrePersist
+    @PostPersist
     private void fillBusinessKey() {
         if (businessKey == null) {
             businessKey = generateBusinessKey();
