@@ -75,6 +75,7 @@ public class Initializer {
         Customer cust = new Customer();
         cust.setFirstName("Remco");
         cust.setLastName("Groenenboom");
+        cust.setEmailAddress("remco@email.com");
         cust.setAddress(address);
         cust.setCreditLimit(TEST_CREDIT_LIMIT);
         cust.setCredentials(securityService.createCredentials("remco", "password"));
