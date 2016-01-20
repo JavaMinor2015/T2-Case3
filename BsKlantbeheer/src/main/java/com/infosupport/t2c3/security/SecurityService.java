@@ -5,12 +5,10 @@ import com.infosupport.t2c3.domain.accounts.Customer;
 import com.infosupport.t2c3.exceptions.NonUniqueValueException;
 import com.infosupport.t2c3.repositories.CredentialsRepository;
 import com.infosupport.t2c3.repositories.CustomerRepository;
-import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import javax.annotation.PostConstruct;
 import lombok.Setter;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.log4j.Logger;
@@ -22,10 +20,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class SecurityService {
-
-    //TODO: Remove
-    public static final BigDecimal TEST_CREDIT_LIMIT = new BigDecimal(500);
-
 
     private static final int RANDOM_MIN = 12345;
     private static final Logger LOGGER = Logger.getLogger(SecurityService.class.getName());
@@ -76,26 +70,10 @@ public class SecurityService {
      */
     private String createToken(Credentials c) {
         Customer customer = customerRepo.findByCredentialsUserName(c.getUserName());
-
         String token = hash(customer.getFirstName() + customer.getLastName() + (new SecureRandom().nextInt() + RANDOM_MIN));
         customer.getCredentials().setToken(token);
         credentialsRepo.save(customer.getCredentials());
-        System.out.println(token);
         return token;
-    }
-
-    /**
-     * Initialize this security service.
-     */
-    @PostConstruct
-    public void init() {
-        //TODO: Remove
-        Customer cust = new Customer();
-        cust.setFirstName("Remco");
-        cust.setLastName("Groenenboom");
-        cust.setCreditLimit(TEST_CREDIT_LIMIT);
-        cust.setCredentials(createCredentials("remco", "password"));
-        customerRepo.save(cust);
     }
 
     /**
@@ -124,7 +102,6 @@ public class SecurityService {
      * @param token token of the user to log out
      */
     public void logout(String token) {
-        System.out.println(token);
         Credentials credentials = credentialsRepo.findByToken(token);
         credentials.setToken("");
         credentialsRepo.save(credentials);
