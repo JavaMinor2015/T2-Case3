@@ -5,6 +5,7 @@ import com.infosupport.t2c3.domain.accounts.Customer;
 import com.infosupport.t2c3.exceptions.NonUniqueValueException;
 import com.infosupport.t2c3.repositories.CredentialsRepository;
 import com.infosupport.t2c3.repositories.CustomerRepository;
+import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -23,6 +24,8 @@ public class SecurityService {
 
     private static final int RANDOM_MIN = 12345;
     private static final Logger LOGGER = Logger.getLogger(SecurityService.class.getName());
+    public static final BigDecimal DEFAULT_CREDIT_LIMIT = BigDecimal.valueOf(100);
+
 
     @Setter
     @Autowired
@@ -123,6 +126,7 @@ public class SecurityService {
         Credentials newCredentials = createCredentials(oldCredentials.getUserName(), oldCredentials.getPassword());
 
         customer.setCredentials(newCredentials);
+        customer.setCreditLimit(DEFAULT_CREDIT_LIMIT);
 
         customerRepo.save(customer);
     }

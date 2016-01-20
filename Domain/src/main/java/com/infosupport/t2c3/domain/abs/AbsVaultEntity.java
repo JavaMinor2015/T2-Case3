@@ -3,7 +3,6 @@ package com.infosupport.t2c3.domain.abs;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PostPersist;
-import javax.persistence.PrePersist;
 import lombok.Getter;
 
 /**
@@ -41,7 +40,7 @@ public abstract class AbsVaultEntity extends AbsEntity implements DataVaultEnabl
     /**
      * Get only the first three digits of the given string.
      * This takes less than 3 if it's shorter. It also calls #toUpperCase()
-     *  on the result.
+     * on the result.
      *
      * @param thing The string
      * @return The resulting string
