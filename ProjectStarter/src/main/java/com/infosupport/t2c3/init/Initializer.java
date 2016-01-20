@@ -6,7 +6,10 @@ import com.infosupport.t2c3.domain.products.Category;
 import com.infosupport.t2c3.domain.products.Product;
 import com.infosupport.t2c3.domain.products.Supply;
 import com.infosupport.t2c3.exceptions.ItemNotFoundException;
-import com.infosupport.t2c3.repositories.*;
+import com.infosupport.t2c3.repositories.CustomerRepository;
+import com.infosupport.t2c3.repositories.OrderRepository;
+import com.infosupport.t2c3.repositories.ProductRepository;
+import com.infosupport.t2c3.repositories.SupplyRepository;
 import com.infosupport.t2c3.security.SecurityService;
 import com.infosupport.t2c3.service.OrderService;
 import java.math.BigDecimal;
@@ -29,6 +32,13 @@ public class Initializer {
 
     //Product constants
     private static final int DEFAULT_SUPPLY = 15;
+    private static final String GAZELLE = "Gazelle";
+    private static final String BATAVUS = "Batavus";
+    private static final double GAZELLE_BIKE_PRICE = 499.99;
+    private static final double BATAVUS_BIKE_PRICE = 699.99;
+    private static final double HANDBRAKE_PRICE = 18.99;
+    private static final double BACKLIGHT_PRICE = 6.99;
+    private static final double HANDLE_PRICE = 14.75;
 
     //Order constants
     private static final int MAX_FIVE = 5;
@@ -36,7 +46,7 @@ public class Initializer {
     private static final int MAX_THREE = 3;
 
     //Customer constants
-    public static final BigDecimal TEST_CREDIT_LIMIT = new BigDecimal(500);
+    public static final BigDecimal TEST_CREDIT_LIMIT = BigDecimal.valueOf(500);
 
     @Autowired
     private CustomerRepository customerRepo;
@@ -53,7 +63,9 @@ public class Initializer {
     private SupplyRepository supplyRepo;
 
 
-
+    /**
+     * Calls the dummy creating methods.
+     */
     @PostConstruct
     public void init() {
         //Creating products
@@ -64,6 +76,9 @@ public class Initializer {
         initOrders();
     }
 
+    /**
+     * Creates the dummy customers.
+     */
     public void initCustomer() {
         //Creating customer
         Address address = new Address(
@@ -83,60 +98,66 @@ public class Initializer {
     }
 
 
+    /**
+     * Creates the dummy products.
+     */
     public void initProducts() {
 
-            Product p = new Product(
-                    "Gazelle fiets",
-                    new BigDecimal(499.99),
-                    Category.BICYCLE,
-                    null
-            );
+        Product p = new Product(
+                GAZELLE + " fiets",
+                BigDecimal.valueOf(GAZELLE_BIKE_PRICE),
+                Category.BICYCLE,
+                null
+        );
 
-            Supply supply = new Supply(p, DEFAULT_SUPPLY, "Gazzelle");
-            supplyRepo.save(supply);
+        Supply supply = new Supply(p, DEFAULT_SUPPLY, GAZELLE);
+        supplyRepo.save(supply);
 
-            p = new Product(
-                    "Batavus fiets",
-                    new BigDecimal(699.99),
-                    Category.BICYCLE,
-                    null
-            );
+        p = new Product(
+                BATAVUS + " fiets",
+                BigDecimal.valueOf(BATAVUS_BIKE_PRICE),
+                Category.BICYCLE,
+                null
+        );
 
-            supply = new Supply(p, DEFAULT_SUPPLY, "Batavus");
-            supplyRepo.save(supply);
+        supply = new Supply(p, DEFAULT_SUPPLY, BATAVUS);
+        supplyRepo.save(supply);
 
-            p = new Product(
-                    "Handrem",
-                    new BigDecimal(18.99),
-                    Category.PART,
-                    null
-            );
+        p = new Product(
+                "Handrem",
+                BigDecimal.valueOf(HANDBRAKE_PRICE),
+                Category.PART,
+                null
+        );
 
-            supply = new Supply(p, DEFAULT_SUPPLY, "Gazzelle");
-            supplyRepo.save(supply);
+        supply = new Supply(p, DEFAULT_SUPPLY, GAZELLE);
+        supplyRepo.save(supply);
 
-            p = new Product(
-                    "Achterlicht",
-                    new BigDecimal(6.99),
-                    Category.PART,
-                    null
-            );
+        p = new Product(
+                "Achterlicht",
+                BigDecimal.valueOf(BACKLIGHT_PRICE),
+                Category.PART,
+                null
+        );
 
-            supply = new Supply(p, DEFAULT_SUPPLY, "Batavus");
-            supplyRepo.save(supply);
+        supply = new Supply(p, DEFAULT_SUPPLY, BATAVUS);
+        supplyRepo.save(supply);
 
-            p = new Product(
-                    "Handvaten",
-                    new BigDecimal(14.75),
-                    Category.PART,
-                    null
-            );
+        p = new Product(
+                "Handvaten",
+                BigDecimal.valueOf(HANDLE_PRICE),
+                Category.PART,
+                null
+        );
 
-            supply = new Supply(p, DEFAULT_SUPPLY, "Gazzelle");
-            supplyRepo.save(supply);
-        }
+        supply = new Supply(p, DEFAULT_SUPPLY, GAZELLE);
+        supplyRepo.save(supply);
+    }
 
 
+    /**
+     * Creates dummy orders.
+     */
     private void initOrders() {
         SecureRandom random = new SecureRandom();
 
@@ -178,8 +199,8 @@ public class Initializer {
             orderRepo.save(order);
         }
 
-        Customer customer = customerRepo.findOne(1l);
-        customer.addOrder(orderRepo.findOne(1l));
+        Customer customer = customerRepo.findOne(1L);
+        customer.addOrder(orderRepo.findOne(1L));
         customerRepo.save(customer);
     }
 
