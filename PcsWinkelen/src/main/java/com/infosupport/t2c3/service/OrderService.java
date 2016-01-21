@@ -145,7 +145,7 @@ public class OrderService extends AbsSecuredRestService<Order> {
      * @return order object with new values
      */
     @RequestMapping(value = "/{orderId}", method = RequestMethod.PUT, consumes = "application/json")
-    public ResponseEntity<Order> editOrderAddress(
+    public ResponseEntity<Order> editOrder(
             @RequestBody Order newOrder,
             @RequestHeader String tokenValue,
             @PathVariable Long orderId) {
@@ -159,6 +159,8 @@ public class OrderService extends AbsSecuredRestService<Order> {
         }
 
         order.getCustomerData().getAddress().edit(newOrder.getCustomerData().getAddress());
+        order.getCustomerData().setFirstName(newOrder.getCustomerData().getFirstName());
+        order.getCustomerData().setLastName(newOrder.getCustomerData().getLastName());
         orderRepo.save(order);
 
         return new ResponseEntity<>(order, HttpStatus.OK);
