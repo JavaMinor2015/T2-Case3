@@ -16,7 +16,6 @@ public class EsbToken {
     private static final long TOKEN_LIFESPAN = 2L * 60 * 60 * 1000;
 
     private String token;
-    @Setter
     private EsbTask task;
 
     private long expiresAt;
