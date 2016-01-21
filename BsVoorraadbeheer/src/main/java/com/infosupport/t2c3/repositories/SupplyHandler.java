@@ -39,7 +39,7 @@ public class SupplyHandler {
     public Integer decreaseStock(Product product, Integer decreaseWith) throws CaseException {
         Supply supply = getSupply(product);
         if (decreaseWith > supply.getLeft()) {
-            throw new NoSupplyException(product, supply.getLeft());
+            throw new NoSupplyException(product, supply.getLeft(), product.getName());
         }
         supply.setLeft(supply.getLeft() - decreaseWith);
         repo.save(supply);
