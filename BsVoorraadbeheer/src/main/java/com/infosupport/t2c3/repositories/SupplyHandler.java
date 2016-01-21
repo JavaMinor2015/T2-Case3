@@ -55,7 +55,6 @@ public class SupplyHandler {
      */
     public Integer increaseStock(Product product, Integer increaseWith) {
         Supply supply = getSupply(product);
-
         supply.setLeft(supply.getLeft() + increaseWith);
         repo.save(supply);
         return supply.getLeft();
