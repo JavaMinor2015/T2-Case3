@@ -31,7 +31,7 @@ public class SupplyHandler {
     /**
      * Decrease the stock of a certain Product.
      *
-     * @param product The product
+     * @param product      The product
      * @param decreaseWith Decrease with amount
      * @return The new number of units left
      * @throws CaseException If no Supply is found for this Product or if there aren't enough Units left
@@ -42,6 +42,20 @@ public class SupplyHandler {
             throw new NoSupplyException(product, supply.getLeft());
         }
         supply.setLeft(supply.getLeft() - decreaseWith);
+        repo.save(supply);
+        return supply.getLeft();
+    }
+
+    /**
+     * Increase the stock of a certain Product.
+     *
+     * @param product      The product
+     * @param increaseWith Increase with amount
+     * @return The new number of units left
+     */
+    public Integer increaseStock(Product product, Integer increaseWith) {
+        Supply supply = getSupply(product);
+        supply.setLeft(supply.getLeft() + increaseWith);
         repo.save(supply);
         return supply.getLeft();
     }

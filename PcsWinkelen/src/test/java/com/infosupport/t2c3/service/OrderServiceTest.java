@@ -3,7 +3,9 @@ package com.infosupport.t2c3.service;
 import com.infosupport.t2c3.domain.accounts.Customer;
 import com.infosupport.t2c3.domain.orders.Order;
 import com.infosupport.t2c3.domain.orders.OrderItem;
+import com.infosupport.t2c3.domain.orders.OrderStatus;
 import com.infosupport.t2c3.domain.products.Product;
+import com.infosupport.t2c3.esb.DataVaultService;
 import com.infosupport.t2c3.exceptions.CaseException;
 import com.infosupport.t2c3.model.OrderRequest;
 import com.infosupport.t2c3.model.Token;
@@ -35,6 +37,7 @@ public class OrderServiceTest extends TestCase {
     private ProductRepository mockedProductRepo;
     private SupplyHandler supplyHandler;
     private CustomerRepository mockedCustomerRepo;
+    private DataVaultService mockedDataVaultService;
 
     public void setUp() throws Exception {
         super.setUp();
@@ -47,6 +50,7 @@ public class OrderServiceTest extends TestCase {
 
         customer = new Customer();
         customer.setFirstName("testVoornaam");
+        customer.setCreditLimit(new BigDecimal(5000));
         customer.setOrders(new ArrayList<>());
 
         OrderItem item1 = new OrderItem(null, 2, p1);
@@ -58,13 +62,14 @@ public class OrderServiceTest extends TestCase {
         items.add(item2);
         items.add(item3);
 
-        order = new Order(null, null, items, null);
+        order = new Order(null, null, false, items, null);
 
         orderService = new OrderService();
         mockedOrderRepo = mock(OrderRepository.class);
         mockedProductRepo = mock(ProductRepository.class);
         supplyHandler = mock(SupplyHandler.class);
         mockedCustomerRepo = mock(CustomerRepository.class);
+        mockedDataVaultService = mock(DataVaultService.class);
 
 
         when(p1.getId()).thenReturn(1L);
@@ -84,6 +89,7 @@ public class OrderServiceTest extends TestCase {
         orderService.setProductRepo(mockedProductRepo);
         orderService.setSupplyHandler(supplyHandler);
         orderService.setCustomerRepo(mockedCustomerRepo);
+        orderService.setDataVaultService(mockedDataVaultService);
     }
 
     public void testPlaceOrderWithToken(){
@@ -97,13 +103,9 @@ public class OrderServiceTest extends TestCase {
     }
 
     public void testPlaceOrderWithoutToken(){
-
         assertTrue(customer.getOrders().size() == 0);
-        try {
-            orderService.placeOrder(new OrderRequest(null, order));
-        } catch (CaseException e) {
-            fail();
-        }
+        orderService.placeOrder(new OrderRequest(null, order));
+        assertEquals(OrderStatus.WAIT_FOR_APPROVAL, order.getStatus());
         assertTrue(customer.getOrders().size() == 0 );
     }
 
@@ -117,9 +119,9 @@ public class OrderServiceTest extends TestCase {
         Product p2 = mockedProductRepo.findOne(items.get(1).getProduct().getId());
 
         try {
-        orderService.placeOrder(new OrderRequest(null, order));
+            orderService.placeOrder(new OrderRequest(new Token("TOKENFORCUSTOMER", null), order));
         } catch (CaseException e) {
-            fail();
+            fail("Unable to place order: " + e.getMessage());
         }
 
         assertEquals(new BigDecimal(173.22).setScale(2, RoundingMode.HALF_UP), order.getItems().get(0).getPrice().setScale(2, RoundingMode.HALF_UP));

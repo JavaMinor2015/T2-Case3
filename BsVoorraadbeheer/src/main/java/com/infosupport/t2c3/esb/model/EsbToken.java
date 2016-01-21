@@ -3,7 +3,6 @@ package com.infosupport.t2c3.esb.model;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 /**
  * Created by Stoux on 12/01/2016.
@@ -16,7 +15,6 @@ public class EsbToken {
     private static final long TOKEN_LIFESPAN = 2L * 60 * 60 * 1000;
 
     private String token;
-    @Setter
     private EsbTask task;
 
     private long expiresAt;

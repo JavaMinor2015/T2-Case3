@@ -22,4 +22,14 @@ public class Address extends AbsEntity {
     private String streetNumber;
     private String zipcode;
 
+    /**
+     * Edit the editable fields.
+     * @param address address object with the new values
+     */
+    public void edit(Address address) {
+        this.city = address.getCity();
+        this.street = address.getStreet();
+        this.streetNumber = address.getStreetNumber();
+        this.zipcode = address.getZipcode();
+    }
 }

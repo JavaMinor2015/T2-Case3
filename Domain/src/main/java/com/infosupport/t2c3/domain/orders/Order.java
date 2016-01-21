@@ -1,6 +1,6 @@
 package com.infosupport.t2c3.domain.orders;
 
-import com.infosupport.t2c3.domain.abs.AbsEntity;
+import com.infosupport.t2c3.domain.abs.AbsVaultEntity;
 import java.math.BigDecimal;
 import java.util.List;
 import javax.persistence.*;
@@ -19,7 +19,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "ORDERS")
-public class Order extends AbsEntity {
+public class Order extends AbsVaultEntity {
 
     private static final long serialVersionUID = 3562382393047819011L;
 
@@ -28,9 +28,15 @@ public class Order extends AbsEntity {
     @Enumerated(EnumType.STRING)
     @Setter
     private OrderStatus status;
+    @Setter
+    private boolean paid;
     @OneToMany(cascade = CascadeType.PERSIST)
     private List<OrderItem> items;
     @OneToOne(cascade = CascadeType.PERSIST)
     private CustomerData customerData;
 
+    @Override
+    public String generateBusinessKey() {
+        return "ORD-" + getId();
+    }
 }

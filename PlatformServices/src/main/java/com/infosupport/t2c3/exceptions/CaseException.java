@@ -3,7 +3,7 @@ package com.infosupport.t2c3.exceptions;
 /**
  * Created by Stoux on 13/01/2016.
  */
-public abstract class CaseException extends Exception {
+public abstract class CaseException extends RuntimeException {
 
     /**
      * Create a basic CaseException.
@@ -13,4 +13,5 @@ public abstract class CaseException extends Exception {
     public CaseException(String message) {
         super(message);
     }
+
 }
