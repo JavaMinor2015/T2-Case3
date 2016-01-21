@@ -1,6 +1,6 @@
 package com.infosupport.t2c3.exceptions;
 
-import com.infosupport.t2c3.domain.abs.AbsEntity;
+import com.infosupport.t2c3.domain.products.Product;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -17,12 +17,12 @@ public class NoSupplyException extends CaseException {
     /**
      * Constructor for a NoSupplyException.
      *
-     * @param ofEntity The entity in question
+     * @param product The product in question
      * @param itemsLeft The actual number of items left
      */
-    public NoSupplyException(AbsEntity ofEntity, int itemsLeft, String name) {
+    public NoSupplyException(Product product, int itemsLeft) {
         super(
-                "There are only " + itemsLeft + " items left of " + name
+                "There are only " + itemsLeft + " items left of " + product.getName()
         );
         this.itemsLeft = itemsLeft;
     }
