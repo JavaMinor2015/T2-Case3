@@ -54,6 +54,7 @@ public class SupplyService {
         //Create a new task if needed
         if (task == null) {
             task = taskHandler.startSyncTask();
+            currentTasks.add(task);
         }
 
 
