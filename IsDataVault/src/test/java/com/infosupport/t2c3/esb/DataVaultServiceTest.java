@@ -10,8 +10,9 @@ import org.mockito.MockingDetails;
 import org.springframework.test.util.ReflectionTestUtils;
 import retrofit2.Call;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
 
 /**
  * Created by Stoux on 21/01/2016.

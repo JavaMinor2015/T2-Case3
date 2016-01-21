@@ -8,8 +8,9 @@ import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
 
 /**
  * Created by Stoux on 21/01/2016.

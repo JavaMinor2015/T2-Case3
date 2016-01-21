@@ -8,8 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by Stoux on 21/01/2016.

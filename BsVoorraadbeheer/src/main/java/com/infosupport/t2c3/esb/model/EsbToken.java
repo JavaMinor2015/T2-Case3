@@ -3,7 +3,6 @@ package com.infosupport.t2c3.esb.model;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 /**
  * Created by Stoux on 12/01/2016.
