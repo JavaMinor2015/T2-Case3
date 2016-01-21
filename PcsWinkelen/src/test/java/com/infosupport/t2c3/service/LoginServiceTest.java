@@ -74,12 +74,12 @@ public class LoginServiceTest extends TestCase {
         when(credentials.getUserName())
                 .thenReturn("WrongUserName");
 
-       try {
-           ResponseEntity<Token> entity = loginService.login(credentials);
-           fail("Exception expected");
-       }catch(BadLoginException e){
+        try {
+            ResponseEntity<Token> entity = loginService.login(credentials);
+            fail("Exception expected");
+        } catch (BadLoginException e) {
 
-       }
+        }
 
 
     }
